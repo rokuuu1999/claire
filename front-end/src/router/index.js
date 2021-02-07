@@ -1,6 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import LoginAndRegister from "@/views/LoginAndRegister";
+import Login from "@/views/Login";
+import Register from "@/views/Register";
+import Home from "@/views/Home";
+import NotFound from "@/views/NotFound";
 
 Vue.use(VueRouter);
 
@@ -8,7 +11,28 @@ const routes = [
   {
     path: "/login",
     name: "login",
-    component: LoginAndRegister
+    component: Login
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: Register
+  },
+  {
+    path: "/",
+    name: "home",
+    component: Home,
+    child: [
+      {
+        path: "/self",
+        name: "self"
+      }
+    ]
+  },
+  {
+    path: "*",
+    name: "not-found",
+    component: NotFound
   }
 ];
 

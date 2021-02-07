@@ -1,18 +1,9 @@
 <template>
   <div class="full-size login-page">
-    <v-card class="login-page-card">
+    <v-card class="login-page-card" elevation="10">
       <div class="banner-container">
         <v-card class="input-banner" color="primary">
-          <div class="banner-title">Login</div>
-          <div class="third-party">
-            <template v-for="(thirdPartyName, index) in thirdParty">
-              <v-btn :key="index" depressed text fab small color="white">
-                <v-icon dark>
-                  {{ "mdi-" + thirdPartyName }}
-                </v-icon>
-              </v-btn>
-            </template>
-          </div>
+          <div class="banner-title">Register</div>
         </v-card>
       </div>
       <div class="input-container">
@@ -25,10 +16,10 @@
         </template>
       </div>
       <div class="button-container">
-        <v-btn depressed tile width="50%">
-          Register
+        <v-btn depressed tile width="50%" to="/login">
+          Back
         </v-btn>
-        <v-btn depressed tile color="primary" width="50%">
+        <v-btn depressed tile color="primary" width="50%" @click="register">
           Submit
         </v-btn>
       </div>
@@ -38,9 +29,10 @@
 
 <script>
 import BaseInput from "@/components/BaseInput";
+import axios from "axios";
 
 export default {
-  name: "LoginAndRegister",
+  name: "Register",
   components: {
     BaseInput
   },
@@ -49,14 +41,27 @@ export default {
       items: [
         { title: "Name", icon: "account-circle" },
         { title: "Email", icon: "at" },
-        { title: "Password", icon: "lock" }
-      ],
-      thirdParty: ["wechat", "qqchat", "github"]
+        { title: "Password", icon: "lock" },
+        { title: "rePassword", icon: "lock" }
+      ]
     };
   },
   methods: {
-    login: function() {},
-    register: function() {}
+    register: function() {
+      axios
+        .post("/register", {
+          name: this.items.name.value,
+          email: this.items.email.value,
+          password: this.items.password.value
+        })
+        .then(function(res) {
+          // 跳转
+          console.log(res);
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+    }
   }
 };
 </script>
@@ -77,12 +82,12 @@ export default {
     justify-content: space-between;
     align-items: center;
     width: 25%;
-    height: 45%;
+    height: 50%;
 
     .banner-container {
       display: block;
       width: 100%;
-      height: 15%;
+      height: 10%;
       .input-banner {
         position: absolute;
         display: flex;

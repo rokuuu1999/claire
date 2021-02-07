@@ -1,7 +1,11 @@
 <template>
-  <div class="input-item">
-    <v-text-field :label="title" :append-icon="'mdi-' + icon"></v-text-field>
-  </div>
+  <v-text-field
+    class="input-item"
+    :type="title.indexOf('Password') !== -1 ? 'password' : 'text'"
+    :label="title"
+    :append-icon="'mdi-' + icon"
+    v-model="value"
+  ></v-text-field>
 </template>
 
 <script>
@@ -16,6 +20,16 @@ export default {
       type: String,
       required: true
     }
+  },
+  data() {
+    return {
+      value: ""
+    };
+  },
+  watch: {
+    value: function(newVal) {
+      this.$emit("change", newVal);
+    }
   }
 };
 </script>
@@ -23,9 +37,6 @@ export default {
 <style lang="less" scoped>
 @import "~@/assets/css/common";
 .input-item {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   width: 95%;
 }
 </style>
