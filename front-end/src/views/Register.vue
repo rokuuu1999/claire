@@ -38,19 +38,19 @@ export default {
   },
   data() {
     return {
-      items: [
-        { title: "Name", icon: "account-circle" },
-        { title: "Email", icon: "at" },
-        { title: "Password", icon: "lock" },
-        { title: "rePassword", icon: "lock" }
-      ]
+      items: {
+        username: { title: "UserName", icon: "account-circle" },
+        email: { title: "Email", icon: "at" },
+        password: { title: "Password", icon: "lock" },
+        repassword: { title: "rePassword", icon: "lock" }
+      }
     };
   },
   methods: {
     register: function() {
       axios
         .post("/register", {
-          name: this.items.name.value,
+          username: this.items.username.value,
           email: this.items.email.value,
           password: this.items.password.value
         })

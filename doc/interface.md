@@ -1,0 +1,16 @@
+- login
+    - path : /login
+    - method : Post
+    - parameter : 
+        - name : String
+        - email : String
+        - password : String
+
+- register
+    - path : /register
+    - method : Post
+    - parameter : 
+        - name :
+        - email : 
+        - password :
+        - repassword : 

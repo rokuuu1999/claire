@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       items: {
-        name: { title: "Name", icon: "account-circle", value: "" },
+        username: { title: "UserName", icon: "account-circle", value: "" },
         email: { title: "Email", icon: "at", value: "" },
         password: { title: "Password", icon: "lock", value: "" }
       },
@@ -61,7 +61,7 @@ export default {
       console.log(this.items);
       axios
         .post("/login", {
-          name: this.items.name.value,
+          username: this.items.username.value,
           email: this.items.email.value,
           password: this.items.password.value
         })
