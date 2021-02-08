@@ -4,6 +4,8 @@ import Login from "@/views/Login";
 import Register from "@/views/Register";
 import Home from "@/views/Home";
 import NotFound from "@/views/NotFound";
+import HomePage from "@/components/HomePage";
+import SelfPage from "@/components/SelfPage";
 
 Vue.use(VueRouter);
 
@@ -22,10 +24,16 @@ const routes = [
     path: "/",
     name: "home",
     component: Home,
-    child: [
+    children: [
+      {
+        path: "/",
+        name: "homepage",
+        component: HomePage
+      },
       {
         path: "/self",
-        name: "self"
+        name: "self",
+        components: SelfPage
       }
     ]
   },
