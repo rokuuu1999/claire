@@ -9,8 +9,8 @@ class db:
         self.connect()
 
     def connect(self):
-        # self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
-        self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
+        self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
+        # self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
 
     def disconnect(self):
         self.db.disconnect()

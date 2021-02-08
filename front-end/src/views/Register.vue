@@ -9,6 +9,7 @@
       <div class="input-container">
         <template v-for="(item, index) in items">
           <BaseInput
+            v-on:change="item.value = $event"
             :title="item.title"
             :icon="item.icon"
             :key="index"
@@ -39,10 +40,10 @@ export default {
   data() {
     return {
       items: {
-        username: { title: "UserName", icon: "account-circle" },
-        email: { title: "Email", icon: "at" },
-        password: { title: "Password", icon: "lock" },
-        repassword: { title: "rePassword", icon: "lock" }
+        username: { title: "UserName", icon: "account-circle", value: "" },
+        email: { title: "Email", icon: "at", value: "" },
+        password: { title: "Password", icon: "lock", value: "" },
+        repassword: { title: "rePassword", icon: "lock", value: "" }
       }
     };
   },
@@ -52,7 +53,8 @@ export default {
         .post("/register", {
           username: this.items.username.value,
           email: this.items.email.value,
-          password: this.items.password.value
+          password: this.items.password.value,
+          repassword: this.items.repassword.value
         })
         .then(function(res) {
           // 跳转
