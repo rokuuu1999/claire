@@ -40,11 +40,14 @@ def register():
         user_email = request.form['email']
         user_password = request.form['password']
         user_repassword = request.form['repassword']
+        cursor = db.cursor()
         data = cursor.fetchall()
         if user_repassword == user_password:
             sql = "INSERT INTO USER , VALUES('%s','%s','%s')" (user_name,user_email,user_password)
             db.close
+
             cursor.execute('sql')
+            db.commit()
             return '200okokokokk'
         else:
             return 'flase'
