@@ -58,16 +58,21 @@ export default {
   },
   methods: {
     login: function() {
-      console.log(this.items);
       axios
-        .post("/login", {
+        .post("http://localhost:5000/login", {
           username: this.items.username.value,
           email: this.items.email.value,
           password: this.items.password.value
         })
-        .then(function(res) {
+        .then(res => {
           // 跳转并保存Cookie
           console.log(res);
+          this.$store.commit("login", {
+            authority: 1,
+            username: "test",
+            avatarUrl: "https://cdn.vuetifyjs.com/images/john.jpg"
+          });
+          this.$router.push("/");
         })
         .catch(function(err) {
           console.log(err);
