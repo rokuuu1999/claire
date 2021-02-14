@@ -1,6 +1,7 @@
 import json
 from app import app, database
 from flask import request
+from http.cookiejar import LWPCookieJar
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -16,7 +17,11 @@ def login():
 
         print(user_email)
 
+
         if database.login(user_name) == user_password:
+            session = res.session()
+            session.cookies = LWPCookieJar(filename='Cookies.txt')
+            session.cookies.save()
             return "ok"
         else:
             return "fail"
