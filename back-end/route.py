@@ -43,3 +43,13 @@ def register():
             return 'ok'
         else:
             return 'fail'
+
+@app.route('/article'):
+    #acticle
+
+@app.route('/home', methods = 'GET')
+def home():
+    if request.method == 'GET' :
+        res = json.loads(request.get_data(as_text=True))
+        article_time = res['datetime']
+
