@@ -1,9 +1,10 @@
 import json
 from app import app, database
-from flask import request,make_response
+from flask import request, make_response
 from datetime import datetime
 from datetime import timedelta
 import hashlib
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -16,16 +17,13 @@ def login():
         user_email = res['email']
         user_password = res['password']
 
-        print(user_email)
-
-
         if database.login(user_name) == user_password:
             resp = make_response("success")
             md5 = hashlib.md5()
-            md5.update(resp.encode('utf-8'))
-            saltcookies = md5.hexdigest(user_name)
-            resp.set_cookie('id','hanqi',saltcookies,amax_age = 3600)
-            database.cookies(resp)
+            md5.update(user_name.encode(encoding='UTF-8'))
+            userid = md5.hexdigest()
+            resp.set_cookie('userid', userid, max_age=3600, domain="dev.localhost")
+            database.cookies(userid)
             return resp
         else:
             return "fail"
@@ -48,12 +46,12 @@ def register():
         else:
             return 'fail'
 
-@app.route('/article')
-    #acticle
 
-@app.route('/home', methods = 'GET')
+# @app.route('/article')
+# acticle
+
+@app.route('/home', methods=['GET'])
 def home():
-    if request.method == 'GET' :
+    if request.method == 'GET':
         res = json.loads(request.get_data(as_text=True))
         article_time = res['datetime']
-

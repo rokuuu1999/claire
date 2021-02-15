@@ -1,6 +1,7 @@
 import pymysql
 import datetime
 
+
 # Python 面向对象写法
 class db:
     def __init__(self):
@@ -9,8 +10,8 @@ class db:
         self.connect()
 
     def connect(self):
-        self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
-        # self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
+        # self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
+        self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
 
     def disconnect(self):
         self.db.disconnect()
@@ -30,11 +31,12 @@ class db:
         cursor.execute(sql)
         self.db.commit()
 
-    def cookies(self,resp):
+    def cookies(self, userid):
         cursor = self.db.cursor()
-        sql = "INSERT INTO COOKIES(id) VALUES('%s')" % (resp)
+        sql = "INSERT INTO COOKIES(userid) VALUES('%s')" % (userid)
         cursor.execute(sql)
         self.db.commit()
+
 
 class article:
 
