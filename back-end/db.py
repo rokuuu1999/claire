@@ -30,6 +30,12 @@ class db:
         cursor.execute(sql)
         self.db.commit()
 
+    def cookies(self,user_name,cookies):
+        cursor = self.db.cursor()
+        sql = "INSERT INTO COOKIES(username,cookies) VALUES('%s','%s')" % (user_name,cookies)
+        cursor.execute(sql)
+        self.db.commit()
+
 class article:
 
     def __init__(self):

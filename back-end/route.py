@@ -1,7 +1,8 @@
 import json
 from app import app, database
 from flask import request
-from http.cookiejar import LWPCookieJar
+from datetime import datetime
+from datetime import timedelta
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -19,9 +20,8 @@ def login():
 
 
         if database.login(user_name) == user_password:
-            session = res.session()
-            session.cookies = LWPCookieJar(filename='Cookies.txt')
-            session.cookies.save()
+            cookies = res.set_cookie('username','hanqi',domain = '.miracleremake.com')
+            database.cookies(user_name,cookies)
             return "ok"
         else:
             return "fail"
@@ -44,7 +44,7 @@ def register():
         else:
             return 'fail'
 
-@app.route('/article'):
+@app.route('/article')
     #acticle
 
 @app.route('/home', methods = 'GET')
