@@ -3,7 +3,7 @@ from app import app, database
 from flask import request
 from datetime import datetime
 from datetime import timedelta
-
+import hashlib
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -21,7 +21,10 @@ def login():
 
         if database.login(user_name) == user_password:
             cookies = res.set_cookie('username','hanqi',domain = '.miracleremake.com')
-            database.cookies(user_name,cookies)
+            md5 = hashlib.md5()
+            md5.update(cookies.encode('utf-8'))
+            saltcookies = md5.hexdigest()
+            database.cookies(saltcookies,cookies)
             return "ok"
         else:
             return "fail"
