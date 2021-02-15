@@ -27,7 +27,6 @@ class db:
         cursor = self.db.cursor()
         sql = "INSERT INTO USER(username,email,password) VALUES('%s','%s','%s')" % (
             user_name, user_email, user_password)
-        print(sql)
         cursor.execute(sql)
         self.db.commit()
 

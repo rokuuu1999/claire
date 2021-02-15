@@ -18,12 +18,12 @@ def login():
         user_password = res['password']
 
         if database.login(user_name) == user_password:
-            resp = make_response("success")
+            resp = make_response({"avatarUrl": "https://pic1.zhimg.com/v2-26766ff1df9bf2dfc355c299a668af7a_im.jpg"})
             md5 = hashlib.md5()
             md5.update(user_name.encode(encoding='UTF-8'))
             userid = md5.hexdigest()
-            resp.set_cookie('userid', userid, max_age=3600, domain="dev.localhost")
-            database.cookies(userid)
+            resp.set_cookie('userid', userid, max_age=3600)  # , domain="localhost")
+            # database.cookies(userid)
             return resp
         else:
             return "fail"
@@ -45,6 +45,7 @@ def register():
             return 'ok'
         else:
             return 'fail'
+
 
 
 # @app.route('/article')
