@@ -1,6 +1,6 @@
 import json
 from app import app, database
-from flask import request
+from flask import request,make_response
 from datetime import datetime
 from datetime import timedelta
 import hashlib
@@ -20,12 +20,13 @@ def login():
 
 
         if database.login(user_name) == user_password:
-            cookies = res.set_cookie('username','hanqi',domain = '.miracleremake.com')
+            resp = make_response("success")
             md5 = hashlib.md5()
-            md5.update(cookies.encode('utf-8'))
-            saltcookies = md5.hexdigest()
-            database.cookies(saltcookies,cookies)
-            return "ok"
+            md5.update(resp.encode('utf-8'))
+            saltcookies = md5.hexdigest(user_name)
+            resp.set_cookie('id','hanqi',saltcookies,amax_age = 3600)
+            database.cookies(resp)
+            return resp
         else:
             return "fail"
 

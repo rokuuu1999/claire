@@ -30,9 +30,9 @@ class db:
         cursor.execute(sql)
         self.db.commit()
 
-    def cookies(self,saltcookies,cookies):
+    def cookies(self,resp):
         cursor = self.db.cursor()
-        sql = "INSERT INTO COOKIES(saltcookies,cookies) VALUES('%s','%s')" % (saltcookies,cookies)
+        sql = "INSERT INTO COOKIES(id) VALUES('%s')" % (resp)
         cursor.execute(sql)
         self.db.commit()
 
