@@ -16,9 +16,10 @@ def login():
         user_name = res['username']
         user_email = res['email']
         user_password = res['password']
-
-        if database.user_login(user_name) == user_password:
-            resp = make_response(database.user_login(user_name))
+        data = database.login(user_name)
+        if data[0] == user_password:
+            outcome = {"id":data[1],"authroity":data[2],"avatarUrl":data[3]}
+            resp = make_response(outcome)
             md5 = hashlib.md5()
             md5.update(user_name.encode(encoding='UTF-8'))
             userid = md5.hexdigest()

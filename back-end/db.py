@@ -16,12 +16,13 @@ class db:
     def disconnect(self):
         self.db.disconnect()
 
-    def user_login(self, username):
+    def login(self, username):
         cursor = self.db.cursor()
         sql = "select password,id,authority,avatarUrl from user where username=('%s')" % (username)
         cursor.execute(sql)
         res = cursor.fetchone()
-        return res[0]
+
+        return res
 
     def register(self, user_name, user_email, user_password):
         cursor = self.db.cursor()
