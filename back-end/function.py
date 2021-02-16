@@ -10,7 +10,3 @@ def md5(user_name):
     return userid
 
 
-def aid():
-    res = json.loads(request.get_data(as_text=True))
-    aid = res['aid']
-    return aid

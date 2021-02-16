@@ -50,8 +50,9 @@ def register():
 @app.route('/article',methods=['GET', 'POST'])
 def articles():
     if request.method == 'GET':
-        res = aid()
-        result = database.article(res)
+        res = json.loads(request.get_data(as_text=True))
+        aid = res['aid']
+        result = database.article(aid)
         outcome = {"aid":result[0],"articleTile":result[1],"subTitle":result[2],
                    "articleContent":result[3],"userId":result[4],"time":result[5],
                "commentNum":result[6],"likeNum":result[7],"classify":result[8]}
@@ -64,19 +65,21 @@ def articles():
 @app.route('/tags',methods=['GET', 'POST'])
 def tags():
     if request.method == 'GET':
-        res = aid()
-        result = database.tags(res)
+        res = json.loads(request.get_data(as_text=True))
+        aid = res['aid']
+        result = database.tags(aid)
         outcome = {"aid":result[0],"tag":result[1]}
         resp = make_response(outcome)
         return resp
     else:
         return "fail"
 
-@app.route('/tags',methods=['GET', 'POST'])
+@app.route('/articleImg',methods=['GET', 'POST'])
 def articleimg():
     if request.method == 'GET':
-        res = aid()
-        result = database.articleimg(res)
+        res = json.loads(request.get_data(as_text=True))
+        aid = res['aid']
+        result = database.articleimg(aid)
         outcome = {"aid":result[0],"img":result[1]}
         resp = make_response(outcome)
         return resp
