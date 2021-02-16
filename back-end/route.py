@@ -17,8 +17,8 @@ def login():
         user_email = res['email']
         user_password = res['password']
 
-        if database.login(user_name) == user_password:
-            resp = make_response({"avatarUrl": "https://pic1.zhimg.com/v2-26766ff1df9bf2dfc355c299a668af7a_im.jpg"})
+        if database.user_login(user_name) == user_password:
+            resp = make_response(database.user_login(user_name))
             md5 = hashlib.md5()
             md5.update(user_name.encode(encoding='UTF-8'))
             userid = md5.hexdigest()

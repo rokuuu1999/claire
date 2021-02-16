@@ -10,15 +10,15 @@ class db:
         self.connect()
 
     def connect(self):
-        # self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
-        self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
+        self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
+        #self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
 
     def disconnect(self):
         self.db.disconnect()
 
-    def login(self, username):
+    def user_login(self, username):
         cursor = self.db.cursor()
-        sql = "select password from user where username=('%s')" % (username)
+        sql = "select password,id,authority,avatarUrl from user where username=('%s')" % (username)
         cursor.execute(sql)
         res = cursor.fetchone()
         return res[0]
