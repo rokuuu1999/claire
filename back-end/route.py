@@ -1,10 +1,8 @@
 import json
 from app import app, database
 from flask import request, make_response
-from datetime import datetime
-from datetime import timedelta
-import hashlib
-
+from function import md5
+import time
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -20,11 +18,11 @@ def login():
         if data[0] == user_password:
             outcome = {"id":data[1],"authroity":data[2],"avatarUrl":data[3]}
             resp = make_response(outcome)
-            md5 = hashlib.md5()
-            md5.update(user_name.encode(encoding='UTF-8'))
-            userid = md5.hexdigest()
-            resp.set_cookie('userid', userid, max_age=3600)  # , domain="localhost")
-            # database.cookies(userid)
+            userid = md5(user_name)
+            timeout = time.time() + 60 * 60 * 24
+            resp.set_cookie('userid', userid, expires=timeout)  # , domain="localhost")
+            database.cookies(userid,timeout)
+
             return resp
         else:
             return "fail"

@@ -31,9 +31,9 @@ class db:
         cursor.execute(sql)
         self.db.commit()
 
-    def cookies(self, userid):
+    def cookies(self, userid,time):
         cursor = self.db.cursor()
-        sql = "INSERT INTO COOKIES(userid) VALUES('%s')" % (userid)
+        sql = "INSERT INTO COOKIES(userid,time) VALUES('%s',%s)  ON DUPLICATE KEY UPDATE time = time" % (userid,time)
         cursor.execute(sql)
         self.db.commit()
 
