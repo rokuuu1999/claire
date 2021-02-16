@@ -37,6 +37,26 @@ class db:
         cursor.execute(sql)
         self.db.commit()
 
+    def article(self,aid):
+        cursor = self.db.cursor()
+        sql = "SELECT AID,ARTICLETITLE,SUTITLE,ARTICLECONTENT,USERID,TIME,COMMENTNUM,LIKENUM,CLASSIFY FROM ARTICLES WHERE AID = (%s)" % (aid)
+        cursor.execute(sql)
+        res = cursor.fetchone()
+        return res
+
+    def tags(self,aid):
+        cursor = self.db.cursor()
+        sql = "SELECT AID,TAG FROM TAGS WHERE aid=('%s')" % (aid)
+        cursor.execute(sql)
+        res = cursor.fetchone()
+        return res
+
+    def articleimg(self,aid):
+        cursor = self.db.cursor()
+        sql = "SELECT AID , IMG FROM ARTICLEIMG WHERE AID = ('%s')" % (aid)
+        cursor.execute(sql)
+        res = cursor.fetchone()
+        return res
 
 class article:
 

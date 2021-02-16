@@ -1,7 +1,7 @@
 import json
 from app import app, database
 from flask import request, make_response
-from function import md5
+from function import *
 import time
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -47,8 +47,44 @@ def register():
 
 
 
-# @app.route('/article')
-# acticle
+@app.route('/article',methods=['GET', 'POST'])
+def articles():
+    if request.method == 'GET':
+        res = aid()
+        result = database.article(res)
+        outcome = {"aid":result[0],"articleTile":result[1],"subTitle":result[2],
+                   "articleContent":result[3],"userId":result[4],"time":result[5],
+               "commentNum":result[6],"likeNum":result[7],"classify":result[8]}
+        resp = make_response(outcome)
+        return resp
+    else:
+        return"fail"
+
+
+@app.route('/tags',methods=['GET', 'POST'])
+def tags():
+    if request.method == 'GET':
+        res = aid()
+        result = database.tags(res)
+        outcome = {"aid":result[0],"tag":result[1]}
+        resp = make_response(outcome)
+        return resp
+    else:
+        return "fail"
+
+@app.route('/tags',methods=['GET', 'POST'])
+def articleimg():
+    if request.method == 'GET':
+        res = aid()
+        result = database.articleimg(res)
+        outcome = {"aid":result[0],"img":result[1]}
+        resp = make_response(outcome)
+        return resp
+    else:
+        return "fail"
+
+
+
 
 @app.route('/home', methods=['GET'])
 def home():
