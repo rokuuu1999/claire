@@ -10,8 +10,8 @@ class db:
         self.connect()
 
     def connect(self):
-        self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
-        #self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
+        # self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
+        self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
 
     def disconnect(self):
         self.db.disconnect()
@@ -46,14 +46,14 @@ class db:
 
     def tags(self, tid):
         cursor = self.db.cursor()
-        sql = "SELECT AID,TAG FROM TAGS WHERE TID=('%s')" % (TID)
+        sql = "SELECT AID,TAG FROM TAGS WHERE TID=('%s')" % (tid)
         cursor.execute(sql)
         res = cursor.fetchall()
         return res
 
     def articleimg(self, iid):
         cursor = self.db.cursor()
-        sql = "SELECT AID , IMG FROM ARTICLEIMG WHERE IID = ('%s')" % (IID)
+        sql = "SELECT AID , IMG FROM ARTICLEIMG WHERE IID = ('%s')" % (iid)
         cursor.execute(sql)
         res = cursor.fetchone()
         return res
