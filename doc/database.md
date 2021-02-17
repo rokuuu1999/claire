@@ -2,16 +2,16 @@
 
 > 用户个人信息
 
-- id
+- userId
     - varchar
     - primary key
-- username
+- userName
     - varchar
 - password
     - varchar
 - avatarUrl
     - varchar
-- authority
+- userAuthority
     - int
 
 
@@ -27,7 +27,7 @@
 
 ### Articles
 
-- aid
+- aId
     - varchar
 
 - articleTitle
@@ -35,21 +35,21 @@
 - articleContent
 
 - userId
-- time
+- createTime
 - commentNum
 - likeNum
 - classify
 
 ### Tags
 
-- aid
-- tid
+- aId
+- tId
     - primary key
 - tagName
 
 ### ArticleImg
 
 - aid
-- iimg
+- iId
     - primary key
-- img
+- imgUrl
