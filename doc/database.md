@@ -43,9 +43,13 @@
 ### Tags
 
 - aid
+- tid
+    - primary key
 - tag
 
 ### ArticleImg
 
 - aid
+- iimg
+    - primary key
 - img
