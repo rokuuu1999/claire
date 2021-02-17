@@ -45,7 +45,7 @@
 - aid
 - tid
     - primary key
-- tag
+- tagName
 
 ### ArticleImg
 
