@@ -10,8 +10,8 @@ class db:
         self.connect()
 
     def connect(self):
-        self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
-        #self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
+        # self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
+        self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
 
     def disconnect(self):
         self.db.disconnect()
@@ -24,37 +24,38 @@ class db:
 
         return res
 
-    def register(self, user_name, user_email, user_password):
+    def register(self, user_id, user_name, user_email, user_password):
         cursor = self.db.cursor()
-        sql = "INSERT INTO USER(username,email,password) VALUES('%s','%s','%s')" % (
-            user_name, user_email, user_password)
+        sql = "INSERT INTO USER(userid,username,email,password,userauthority) VALUES('%s','%s','%s','%s','3')" % (
+            user_id, user_name, user_email, user_password)
+        print(sql)
         cursor.execute(sql)
         self.db.commit()
 
-    def cookies(self, userid,time):
+    def cookies(self, userid, time):
         cursor = self.db.cursor()
-        sql = "INSERT INTO COOKIES(userid,time) VALUES('%s',%s)  ON DUPLICATE KEY UPDATE time = time" % (userid,time)
+        sql = "INSERT INTO COOKIES(userid,time) VALUES('%s',%s)  ON DUPLICATE KEY UPDATE time = time" % (userid, time)
         cursor.execute(sql)
         self.db.commit()
 
-    def article(self,aid):
+    def article(self, aid):
         cursor = self.db.cursor()
-        sql = "SELECT AID,ARTICLETITLE,SUBTITLE,ARTICLECONTENT,USERID,CREATETIME,COMMENTNUM,LIKENUM,CLASSIFY FROM ARTICLES WHERE AID = (%s)" % (aid)
+        sql = "SELECT AID,ARTICLETITLE,SUBTITLE,ARTICLECONTENT,USERID,CREATETIME,COMMENTNUM,LIKENUM,CLASSIFY FROM ARTICLES WHERE AID = (%s)" % (
+            aid)
         cursor.execute(sql)
         res = cursor.fetchone()
         return res
 
-    def tags(self,TID):
+    def tags(self, TID):
         cursor = self.db.cursor()
         sql = "SELECT AID,TAG FROM TAGS WHERE TID=('%s')" % (TID)
         cursor.execute(sql)
         res = cursor.fetchall()
         return res
 
-    def articleimg(self,IID):
+    def articleimg(self, IID):
         cursor = self.db.cursor()
         sql = "SELECT AID , IMG FROM ARTICLEIMG WHERE IID = ('%s')" % (IID)
         cursor.execute(sql)
         res = cursor.fetchone()
         return res
-
