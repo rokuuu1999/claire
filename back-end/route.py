@@ -3,6 +3,7 @@ from app import app, database
 from flask import request, make_response
 from function import *
 import time
+from setting import *
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -38,7 +39,7 @@ def register():
         user_email = res['email']
         user_password = res['password']
         user_repassword = res['repassword']
-        user_id = md5(str(time.time()))
+        user_id = md5(user_name + private_key)
 
         if user_repassword == user_password:
             database.register(user_id, user_name, user_email, user_password)

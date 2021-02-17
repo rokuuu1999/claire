@@ -58,7 +58,7 @@ export default {
         })
         .then(function(res) {
           // 跳转
-          console.log(res);
+          this.$router.push("/login");
         })
         .catch(function(err) {
           console.log(err);
