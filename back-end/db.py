@@ -10,8 +10,8 @@ class db:
         self.connect()
 
     def connect(self):
-        # self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
-        self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
+        self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
+        #self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
 
     def disconnect(self):
         self.db.disconnect()
@@ -39,7 +39,7 @@ class db:
 
     def article(self,aid):
         cursor = self.db.cursor()
-        sql = "SELECT AID,ARTICLETITLE,SUBTITLE,ARTICLECONTENT,USERID,CREATETIME,COMMENTNUM,LIKENUM,CLASSIFY FROM ARTICLES WHERE AID = (%s)" % (aid)
+        sql = "SELECT AID,ARTICLETITLE,SUBTITLE,ARTICLECONTENT,CREATETIME,COMMENTNUM,LIKENUM,CLASSIFY FROM ARTICLES WHERE AID = (%s)" % (aid)
         cursor.execute(sql)
         res = cursor.fetchone()
         return res
@@ -56,5 +56,39 @@ class db:
         sql = "SELECT AID , IMG FROM ARTICLEIMG WHERE IID = ('%s')" % (iid)
         cursor.execute(sql)
         res = cursor.fetchone()
+        return res
+
+    def queryusername(self,userid):
+        cursor = self.cursor()
+        sql = "SELECT USERNAME FROM USER WHERE USERID = ('%s')" % userid
+        cursor.execute(sql)
+        username = cursor.fetchone()
+        return username
+
+    def get_index_dict(self,cursor):
+        """
+        获取数据库对应表中的字段名
+        """
+        index_dict = dict()
+        index = 0
+        for desc in cursor.description:
+            index_dict[desc[0]] = index
+            index = index + 1
+        return index_dict
+
+    def get_dict_data_sql(self, sql):
+        """
+        运行sql语句，获取结果，并根据表中字段名，转化成dict格式（默认是tuple格式）
+        """
+        cursor = self.db.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        index_dict = self.get_index_dict(cursor)
+        res = []
+        for datai in data:
+            resi = dict()
+            for indexi in index_dict:
+                resi[indexi] = datai[index_dict[indexi]]
+            res.append(resi)
         return res
 

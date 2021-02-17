@@ -27,7 +27,9 @@ def login():
 
             return resp
         else:
-            return "fail"
+            outcome = {"code": 500, "msg": "登录失败"}
+            resp = make_response(outcome)
+            return resp
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -40,12 +42,19 @@ def register():
         user_password = res['password']
         user_repassword = res['repassword']
         user_id = md5(user_name + private_key)
-
-        if user_repassword == user_password:
+        if database.queryusername(user_id) == user_name:
+            outcome = {"code": 500, "msg": "用户名重复"}
+            resp = make_response(outcome)
+            return resp
+        elif user_repassword == user_password:
             database.register(user_id, user_name, user_email, user_password)
-            return 'ok'
+            outcome = {"code": 200, "msg": "注册成功"}
+            resp = make_response(outcome)
+            return resp
         else:
-            return 'fail'
+            outcome = {"code": 200, "msg": "注册失败"}
+            resp = make_response(outcome)
+            return resp
 
 
 @app.route('/article', methods=['GET', 'POST'])
@@ -55,7 +64,7 @@ def articles():
         aid = res['aid']
         result = database.article(aid)
         outcome = {"aid": result[0], "articleTile": result[1], "subTitle": result[2],
-                   "articleContent": result[3], "userId": result[4], "time": result[5],
+                   "articleContent": result[3], "userId": result[4], "createtime": result[5],
                    "commentNum": result[6], "likeNum": result[7], "classify": result[8]}
         resp = make_response(outcome)
         return resp
@@ -89,8 +98,16 @@ def articleimg():
         return "fail"
 
 
-@app.route('/home', methods=['GET'])
-def home():
+@app.route('/homepage', methods=['GET'])
+def homepage():
     if request.method == 'GET':
-        res = json.loads(request.get_data(as_text=True))
-        article_time = res['datetime']
+        sql = "SELECT * FROM ARTICLES "
+        outcome_articlelist = database.get_dict_data_sql(sql)
+        sql = "SELECT * FROM TAGS "
+        outcome_taglist = database.get_dict_data_sql(sql)
+        outcome = {"code": "200", "msg": "获取成功", "articleList": outcome_articlelist,
+                   "tagList": outcome_taglist}
+        resp = make_response(outcome)
+        return resp
+    else:
+        return "fail"
