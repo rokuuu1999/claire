@@ -5,7 +5,10 @@
         - name : String
         - email : String
         - password : String
-
+- 返回值
+        - 成功：`{code:200 , msg:""}`
+        - 失败：`{code:500 , msg:""}`
+    
 - register
     - path : /register
     - method : Post
@@ -14,3 +17,6 @@
         - email : 
         - password :
         - repassword : 
+    - 返回值
+        - 成功：`{code:200 , msg:""}`
+        - 失败：`{code:500 , msg:""}`
