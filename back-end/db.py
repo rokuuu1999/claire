@@ -18,7 +18,7 @@ class db:
 
     def login(self, username):
         cursor = self.db.cursor()
-        sql = "select password,id,authority,avatarUrl from user where username=('%s')" % (username)
+        sql = "select password,userid,userauthority,avatarUrl from user where username=('%s')" % (username)
         cursor.execute(sql)
         res = cursor.fetchone()
 
@@ -39,21 +39,21 @@ class db:
 
     def article(self,aid):
         cursor = self.db.cursor()
-        sql = "SELECT AID,ARTICLETITLE,SUBTITLE,ARTICLECONTENT,USERID,TIME,COMMENTNUM,LIKENUM,CLASSIFY FROM ARTICLES WHERE AID = (%s)" % (aid)
+        sql = "SELECT AID,ARTICLETITLE,SUBTITLE,ARTICLECONTENT,USERID,CREATETIME,COMMENTNUM,LIKENUM,CLASSIFY FROM ARTICLES WHERE AID = (%s)" % (aid)
         cursor.execute(sql)
         res = cursor.fetchone()
         return res
 
-    def tags(self,aid):
+    def tags(self,TID):
         cursor = self.db.cursor()
-        sql = "SELECT AID,TAG FROM TAGS WHERE aid=('%s')" % (aid)
+        sql = "SELECT AID,TAG FROM TAGS WHERE TID=('%s')" % (TID)
         cursor.execute(sql)
         res = cursor.fetchall()
         return res
 
-    def articleimg(self,aid):
+    def articleimg(self,IID):
         cursor = self.db.cursor()
-        sql = "SELECT AID , IMG FROM ARTICLEIMG WHERE AID = ('%s')" % (aid)
+        sql = "SELECT AID , IMG FROM ARTICLEIMG WHERE IID = ('%s')" % (IID)
         cursor.execute(sql)
         res = cursor.fetchone()
         return res

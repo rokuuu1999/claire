@@ -66,9 +66,9 @@ def articles():
 def tags():
     if request.method == 'GET':
         res = json.loads(request.get_data(as_text=True))
-        aid = res['aid']
-        result = database.tags(aid)
-        outcome = {"aid":result[0],"tag":result[1]}
+        tid = res['tid']
+        result = database.tags(tid)
+        outcome = {"tid":result[0],"tagname":result[1]}
         resp = make_response(outcome)
         return resp
     else:
@@ -78,9 +78,9 @@ def tags():
 def articleimg():
     if request.method == 'GET':
         res = json.loads(request.get_data(as_text=True))
-        aid = res['aid']
-        result = database.articleimg(aid)
-        outcome = {"aid":result[0],"img":result[1]}
+        iid = res['IID']
+        result = database.articleimg(iid)
+        outcome = {"IID":result[0],"imgurl":result[1]}
         resp = make_response(outcome)
         return resp
     else:
