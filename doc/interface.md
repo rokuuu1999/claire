@@ -2,7 +2,7 @@
     - path : /login
     - method : Post
     - parameter : 
-        - name : String
+        - userName : String
         - email : String
         - password : String
 - 返回值
@@ -37,18 +37,40 @@
             {
                 code : 200 ,
                 msg : "" ,
-                articleList : [
+                publishList : [
                     {
-                        aId : "" ,
-                        varchar : "" ,
-                        articleTitle : "" ,
+                        id : "" ,
+                        type : "article",
+                        title : "" ,
                         subTitle : "" ,
                         articleContent : "" ,
                         userId : "" ,
                         createTime : "",
-                        commentNum : "",
-                        likeNum : "",
-                        classify : "" 
+                        classify : "" ,
+                        tags:[
+                            
+                        ]
+                    },
+                    {
+                        id : "" ,
+                        type : "idea",
+                        title : "" ,
+                        ideaContent : "" ,
+                        userId : "" ,
+                        createTime : "",
+                        classify : "" ,
+                        tags:[
+                            
+                        ]
+                    },
+                    {
+                        id : "" ,
+                        type : "video",
+                        title : "" ,
+                        videoUrl : "",
+                        userId : "" ,
+                        createTime : "",
+            
                     }
                 ] ,
                 tagList : [
@@ -62,3 +84,6 @@
             }
             ```
         - 失败：`{code:500 , msg:""}`
+
+
+

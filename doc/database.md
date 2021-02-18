@@ -2,54 +2,80 @@
 
 > 用户个人信息
 
-- userId
-    - varchar
-    - primary key
-- userName
-    - varchar
-- password
-    - varchar
-- avatarUrl
-    - varchar
-- userAuthority
-    - int
-
-
+| 字段名        | 类型 | 描述 |
+| ------------- | ---- | ---- |
+| userId        |      |      |
+| userName      |      |      |
+| password      |      |      |
+| avatarUrl     |      |      |
+| userAuthority |      |      |
 
 ### Cookies
 
 > 用户Cookie
 
-- userId
-    - varchar
-
-
+| 字段名 | 类型 | 描述 |
+| ------ | ---- | ---- |
+| userId |      |      |
 
 ### Articles
 
-- aId
-    - varchar
+| 字段名         | 类型 | 描述 |
+| -------------- | ---- | ---- |
+| id             |      |      |
+| subTitle       |      |      |
+| articleContent |      |      |
+| classify       |      |      |
 
-- articleTitle
-- subTitle
-- articleContent
+### Idea
 
-- userId
-- createTime
-- commentNum
-- likeNum
-- classify
+| 字段名      | 类型 | 描述 |
+| ----------- | ---- | ---- |
+| id          |      |      |
+| ideaContent |      |      |
+| classify    |      |      |
+
+### Video
+
+| 字段名   | 类型 | 描述 |
+| -------- | ---- | ---- |
+| id       |      |      |
+| videoUrl |      |      |
 
 ### Tags
 
-- aId
-- tId
-    - primary key
-- tagName
+| 字段名   | 类型 | 描述 |
+| -------- | ---- | ---- |
+| id       |      |      |
+| parentId |      |      |
+| tagName  |      |      |
 
-### ArticleImg
+### Img
 
-- aid
-- iId
-    - primary key
-- imgUrl
+| 字段名   | 类型 | 描述 |
+| -------- | ---- | ---- |
+| id       |      |      |
+| parentId |      |      |
+| imgUrl   |      |      |
+
+### Comment
+
+| 字段名   | 类型 | 描述 |
+| -------- | ---- | ---- |
+| id       |      |      |
+| parentId |      |      |
+| comment  |      |      |
+
+### Publish
+
+| 字段名     | 类型 | 描述                      |
+| ---------- | ---- | ------------------------- |
+| id         |      | 主键、自增                |
+| parentId   |      | 文章、想法、视频的ID      |
+| createTime |      |                           |
+| userId     |      |                           |
+| Title      |      |                           |
+| commentNum |      |                           |
+| likeNum    |      |                           |
+| type       |      | 文章、想法、视频 三者之一 |
+

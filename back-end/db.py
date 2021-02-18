@@ -11,7 +11,7 @@ class db:
 
     def connect(self):
         self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
-        #self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
+        # self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
 
     def disconnect(self):
         self.db.disconnect()
@@ -31,15 +31,16 @@ class db:
         cursor.execute(sql)
         self.db.commit()
 
-    def cookies(self, userid,time):
+    def cookies(self, userid, time):
         cursor = self.db.cursor()
-        sql = "INSERT INTO COOKIES(userid,time) VALUES('%s',%s)  ON DUPLICATE KEY UPDATE time = time" % (userid,time)
+        sql = "INSERT INTO COOKIES(userid,time) VALUES('%s',%s)  ON DUPLICATE KEY UPDATE time = time" % (userid, time)
         cursor.execute(sql)
         self.db.commit()
 
-    def article(self,aid):
+    def article(self, aid):
         cursor = self.db.cursor()
-        sql = "SELECT AID,ARTICLETITLE,SUBTITLE,ARTICLECONTENT,CREATETIME,COMMENTNUM,LIKENUM,CLASSIFY FROM ARTICLES WHERE AID = (%s)" % (aid)
+        sql = "SELECT AID,ARTICLETITLE,SUBTITLE,ARTICLECONTENT,CREATETIME,COMMENTNUM,LIKENUM,CLASSIFY FROM ARTICLES WHERE AID = (%s)" % (
+            aid)
         cursor.execute(sql)
         res = cursor.fetchone()
         return res
@@ -58,20 +59,19 @@ class db:
         res = cursor.fetchone()
         return res
 
-    def queryusername(self,userid):
+    def queryusername(self, userid):
         cursor = self.cursor()
         sql = "SELECT USERNAME FROM USER WHERE USERID = ('%s')" % userid
         cursor.execute(sql)
         username = cursor.fetchone()
         return username
 
-    def queryallelements(self,database_name):
+    def queryallelements(self, database_name):
         sql = "SELECT * FROM (%s)" % database_name
         elements = self.get_dict_data_sql(sql)
         return elements
 
-
-    def get_index_dict(self,cursor):
+    def get_index_dict(self, cursor):
         """
         获取数据库对应表中的字段名
         """
@@ -97,4 +97,3 @@ class db:
                 resi[indexi] = datai[index_dict[indexi]]
             res.append(resi)
         return res
-
