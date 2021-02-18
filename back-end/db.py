@@ -65,6 +65,12 @@ class db:
         username = cursor.fetchone()
         return username
 
+    def queryallelements(self,database_name):
+        sql = "SELECT * FROM (%s)" % database_name
+        elements = self.get_dict_data_sql(sql)
+        return elements
+
+
     def get_index_dict(self,cursor):
         """
         获取数据库对应表中的字段名

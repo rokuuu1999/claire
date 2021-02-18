@@ -101,10 +101,8 @@ def articleimg():
 @app.route('/homepage', methods=['GET'])
 def homepage():
     if request.method == 'GET':
-        sql = "SELECT * FROM ARTICLES "
-        outcome_articlelist = database.get_dict_data_sql(sql)
-        sql = "SELECT * FROM TAGS "
-        outcome_taglist = database.get_dict_data_sql(sql)
+        outcome_articlelist = database.queryallelements("articles")
+        outcome_taglist = database.queryallelements("tags")
         outcome = {"code": "200", "msg": "获取成功", "articleList": outcome_articlelist,
                    "tagList": outcome_taglist}
         resp = make_response(outcome)
