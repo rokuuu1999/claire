@@ -14,68 +14,72 @@
 
 > 用户Cookie
 
-| 字段名 | 类型 | 描述 |
-| ------ | ---- | ---- |
-| userId |      |      |
+| 字段名     | 类型 | 描述 |
+| ---------- | ---- | ---- |
+| userId     |      |      |
+| expireTime |      |      |
 
 ### Articles
 
 | 字段名         | 类型 | 描述 |
 | -------------- | ---- | ---- |
-| id             |      |      |
+| selfId         |      |      |
 | subTitle       |      |      |
 | articleContent |      |      |
 | classify       |      |      |
 
-### Idea
+### Ideas
 
 | 字段名      | 类型 | 描述 |
 | ----------- | ---- | ---- |
-| id          |      |      |
+| selfId      |      |      |
 | ideaContent |      |      |
 | classify    |      |      |
 
-### Video
+### Videos
 
 | 字段名   | 类型 | 描述 |
 | -------- | ---- | ---- |
-| id       |      |      |
+| selfId   |      |      |
 | videoUrl |      |      |
 
 ### Tags
 
 | 字段名   | 类型 | 描述 |
 | -------- | ---- | ---- |
-| id       |      |      |
+| selfId   |      |      |
 | parentId |      |      |
 | tagName  |      |      |
+| type     |      |      |
 
-### Img
+### Imgs
 
 | 字段名   | 类型 | 描述 |
 | -------- | ---- | ---- |
-| id       |      |      |
+| selfId   |      |      |
 | parentId |      |      |
 | imgUrl   |      |      |
+| type     | int  |      |
 
-### Comment
+### Comments
 
 | 字段名   | 类型 | 描述 |
 | -------- | ---- | ---- |
-| id       |      |      |
+| selfId   |      |      |
 | parentId |      |      |
 | comment  |      |      |
+| type     | int  |      |
 
 ### Publish
 
 | 字段名     | 类型 | 描述                      |
 | ---------- | ---- | ------------------------- |
-| id         |      | 主键、自增                |
+| selfId     |      | 主键、自增                |
 | parentId   |      | 文章、想法、视频的ID      |
 | createTime |      |                           |
 | userId     |      |                           |
 | Title      |      |                           |
-| commentNum |      |                           |
-| likeNum    |      |                           |
+| commentNum |      | 评论数量                  |
+| likeNum    |      | 点赞数量                  |
 | type       |      | 文章、想法、视频 三者之一 |
 
