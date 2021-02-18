@@ -5,6 +5,7 @@
         - userName : String
         - email : String
         - password : String
+    
 - 返回值
         - 成功：`{code:200 , msg:""}`
         - 失败：`{code:500 , msg:""}`
@@ -83,7 +84,40 @@
                 
             }
             ```
+            
+        - 失败：`{code:500 , msg:""}`
+    
+- 发表想法:thinking:
+
+    - path : /publishIdea
+    - method : POST
+    - paramter : 
+        - createTime 
+        - userId      
+        - Title
+        - ideaContent
+        - classify
+        - tags : Array
+    - 返回值
+        - 成功：`{code:200 , msg:""}`
         - 失败：`{code:500 , msg:""}`
 
+- 发表文章:blue_book:
 
+    - path : /publishArticle
+    - method : POST
+    - paramter :
+        - createTime     
+        - userId      
+        - Title
+        - subTitle      
+        - articleContent      
+        - classify
+        - tags : Array
+    - 返回值
+        - 成功：`{code:200 , msg:""}`
+        - 失败：`{code:500 , msg:""}`
 
+- 上传视频​/图片​ (待定)
+    - path :  /uploadFile
+    - method : POST
