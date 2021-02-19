@@ -156,3 +156,18 @@
 }
 ```
 
+
+
+
+
+### Publish
+
+```json
+{
+    "parentId" : "da1346d95e226faefc25a1c32cae4452",
+    "createTime" : "1613724232.828657",
+    "type" : 0
+    // 0:a ,1:i ,2:v
+}
+```
+

@@ -75,7 +75,7 @@
             <v-form ref="ideaForm">
               <v-row>
                 <v-col>
-                  <v-textarea outlined ref="textarea"></v-textarea>
+                  <v-textarea outlined ref="textArea"></v-textarea>
                 </v-col>
               </v-row>
               <v-row justify="start">
@@ -136,6 +136,7 @@
 <script>
 import ArticleCard from "@/components/homePage/ArticleCard";
 import Pagination from "@/components/homePage/Pagination";
+import axios from "axios";
 
 export default {
   name: "HomePage",
@@ -249,6 +250,7 @@ export default {
       console.log(this.$refs.uploadPic.value);
     },
     publish: function() {
+      this.$refs.textArea.value;
       console.log("");
     },
     cancel: function() {
@@ -256,6 +258,14 @@ export default {
       this.pics.length = 0;
       this.overlay = false;
     }
+  },
+  mounted: function() {
+    axios
+      .get("/homepage?page=0")
+      .then(res => {
+        console.log(res);
+      })
+      .catch();
   }
 };
 </script>

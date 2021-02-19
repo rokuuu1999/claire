@@ -46,6 +46,7 @@
 import BaseInput from "@/components/BaseInput";
 import Menus from "@/components/Menus";
 import List from "@/components/List";
+import axios from "axios";
 
 export default {
   name: "AppBar",
@@ -155,9 +156,22 @@ export default {
     }
   },
   mounted() {
-    if (this.getCookie("userid") !== "") {
-      this.$store.state.authed = true;
-      this.$store.state.avatarUrl = window.localStorage.getItem("userAvatar");
+    if (this.getCookie("userId") !== "") {
+      axios
+        .get("/login")
+        .then(res => {
+          console.log(res);
+          if (res.data.code === 200) {
+            console.log("sss");
+            this.$store.state.authed = true;
+            this.$store.state.avatarUrl = window.localStorage.getItem(
+              "userAvatar"
+            );
+          }
+        })
+        .catch(res => {
+          console.log(res);
+        });
     }
   }
 };

@@ -13,20 +13,21 @@ def login():
     if request.method == 'GET':
         res = request.cookies.get('userId')
         now = time.time()
-        if database.cookies_query(res) < now:
-            outcome = {"code": "200", "msg": "cookies未过期"}
+        expireTime = database.cookies_query(res)["expireTime"]
+        if expireTime > now:
+            outcome = {"code": 200, "msg": "cookies未过期"}
             resp = make_response(outcome)
             return resp
-        elif database.cookies_query(res) >= now:
-            outcome = {"code": "500", "msg": "cookies已过期"}
+        elif expireTime <= now:
+            outcome = {"code": 500, "msg": "cookies已过期"}
             resp = make_response(outcome)
             return resp
         else:
-            outcome = {"code": "500", "msg": "未查询到cookies，请重新登录"}
+            outcome = {"code": 500, "msg": "未查询到cookies，请重新登录"}
             resp = make_response(outcome)
             return resp
 
-    if request.method == 'POST':
+    elif request.method == 'POST':
         # 不用明白为什么，暂时这么用
 
         res = json.loads(request.get_data(as_text=True))
@@ -35,14 +36,12 @@ def login():
         user_email = res['email']
         user_password = res['password']
         data = database.login(user_name)
-        if data[0] == user_password:
-            outcome = {"id": data[1], "authroity": data[2], "avatarUrl": data[3]}
+        if data["password"] == user_password:
+            outcome = {"userId": data["userId"], "authroity": data["userAuthority"], "avatarUrl": data["avatarUrl"]}
             resp = make_response(outcome)
-            userid = md5(user_name)
             timeout = time.time() + 60 * 60 * 24
-            resp.set_cookie('userid', userid, expires=timeout)  # , domain="localhost")
-            database.cookies(userid, timeout)
-
+            resp.set_cookie('userId', data["userId"], expires=timeout)  # , domain="localhost")
+            database.cookies(data["userId"], timeout)
             return resp
         else:
             outcome = {"code": 500, "msg": "登录失败"}
@@ -55,6 +54,7 @@ def register():
     if request.method == 'POST':
         # 不用明白为什么
         res = json.loads(request.get_data(as_text=True))
+        print(res)
         user_name = res['userName']
         user_email = res['email']
         user_password = res['password']
@@ -104,7 +104,7 @@ def tags():
 
 
 @app.route('/articleImg', methods=['GET', 'POST'])
-def articleimg():
+def articleImg():
     if request.method == 'GET':
         res = json.loads(request.args.get("IId"))
         iid = res['IID']
@@ -119,7 +119,12 @@ def articleimg():
 @app.route('/homepage', methods=['GET'])
 def homepage():
     if request.method == 'GET':
-        #res = json.loads(request.args.get("skipnum"))
-        Publish_query = database.publish_query_all()
-        resp = make_response(Publish_query)
-        return resp
+        page = json.loads(request.args.get("page"))
+        publishList = database.publish_query_nskips(page * 5)
+        return make_response(publishList)
+
+
+@app.route('/uploadFile', methods=['GET'])
+def upload():
+    if request.method == 'GET':
+       

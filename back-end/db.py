@@ -9,32 +9,33 @@ class db:
         self.connect()
 
     def connect(self):
-        self.myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        self.myclient = pymongo.MongoClient("mongodb://root:rokuuu1999@121.4.74.77:27017/admin")
         self.mydb = self.myclient["clay"]
 
-    def login(self, username):
-        mycol = self.mydb["user"]
-        myquery = {"user": username}
-        mydoc = mycol.find(myquery)
+    def login(self, userName):
+        mycol = self.mydb["User"]
+        myquery = {"userName": userName}
+        mydoc = mycol.find_one(myquery)
         res = mydoc
         return res
 
     def register(self, user_id, user_name, user_email, user_password):
         mycol = self.mydb["User"]
-        mydict = {"userId": user_id, "userName": user_name, "email": user_email, "password": user_password}
-        res = mycol.insert_one(mydict)
+        mydict = {"userId": user_id, "userName": user_name, "email": user_email, "password": user_password,
+                  "avatarUrl": "https://pic2.zhimg.com/da8e974dc_xll.jpg", "userAuthority": 1, "like": [],
+                  "comments": [],
+                  "publish": []}
+        mycol.insert_one(mydict)
 
     def cookies(self, userid, time):
         mycol = self.mydb["Cookies"]
-        mydict = {"userId": userid, "expireTime": time}
-        res = mycol.insert_one(mydict)
+        newCookie = {"userId": userid, "expireTime": time}
+        mycol.update({"userId": userid}, newCookie, True)
 
     def cookies_query(self, userid):
         mycol = self.mydb["Cookies"]
         mydict = {"userId": userid}
-        mydoc = mycol.find_one(mydict)
-        res = mydoc
-        return res
+        return mycol.find_one(mydict)
 
     def article(self, aid):
         mycol = self.mydb["Articles"]
@@ -57,12 +58,15 @@ class db:
         res = mydoc
         return res
 
-    def publish_query_nskips(self):
+    def publish_query_nskips(self, num):
         mycol = self.mydb["Publish"]
-        mydoc = mycol.search_set.find()
-        res = mydoc
-        return res
-    def queryusername(self, userid):
+        res = mycol.find().sort("createTime", -1).skip(num).limit(5)
+        publishList = []
+        for item in res:
+            publishList.append(item)
+        return publishList
+
+    def query_username(self, userid):
         mycol = self.mydb["user"]
         myquery = {"userId": userid}
         mydoc = mycol.find(myquery, {"userName": 1})
