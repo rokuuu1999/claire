@@ -2,12 +2,30 @@ import json
 from app import app, database
 from flask import request, make_response
 from function import *
-import time
+from datetime import datetime
 from setting import *
+from flask import request
+import time
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET':
+        res = request.cookies.get('userId')
+        now = time.time()
+        if database.cookies_query(res) < now:
+            outcome = {"code": "200", "msg": "cookies未过期"}
+            resp = make_response(outcome)
+            return resp
+        elif database.cookies_query(res) >= now:
+            outcome = {"code": "500", "msg": "cookies已过期"}
+            resp = make_response(outcome)
+            return resp
+        else:
+            outcome = {"code": "500", "msg": "未查询到cookies，请重新登录"}
+            resp = make_response(outcome)
+            return resp
+
     if request.method == 'POST':
         # 不用明白为什么，暂时这么用
 
@@ -37,7 +55,7 @@ def register():
     if request.method == 'POST':
         # 不用明白为什么
         res = json.loads(request.get_data(as_text=True))
-        user_name = res['username']
+        user_name = res['userName']
         user_email = res['email']
         user_password = res['password']
         user_repassword = res['repassword']
@@ -88,7 +106,7 @@ def tags():
 @app.route('/articleImg', methods=['GET', 'POST'])
 def articleimg():
     if request.method == 'GET':
-        res = json.loads(request.get_data(as_text=True))
+        res = json.loads(request.args.get("IId"))
         iid = res['IID']
         result = database.articleimg(iid)
         outcome = {"IID": result[0], "imgurl": result[1]}
