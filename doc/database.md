@@ -2,84 +2,157 @@
 
 > 用户个人信息
 
-| 字段名        | 类型 | 描述 |
-| ------------- | ---- | ---- |
-| userId        |      |      |
-| userName      |      |      |
-| password      |      |      |
-| avatarUrl     |      |      |
-| userAuthority |      |      |
+```json
+{
+    "userId": "da1346d95e226faefc25a1c32cae4452",
+    "userName": "someone",
+    "password": "someone",
+    "avatarUrl": "https://pic4.zhimg.com/v2-26766ff1df9bf2dfc355c299a668af7a_is.jpg",
+    "userAuthority": 1,
+    "like": [
+        {
+            "contentId": "",
+            "likeTime": ""
+        }
+    ],
+    "comments": [
+        {
+            "commentId": "",
+            "createTime": ""
+        }
+    ],
+    "publish": [
+        {
+            "contentId": "",
+            "createTime": ""
+        }
+    ]
+}
+```
+
+
 
 ### Cookies
 
 > 用户Cookie
 
-| 字段名     | 类型 | 描述 |
-| ---------- | ---- | ---- |
-| userId     |      |      |
-| expireTime |      |      |
+```json
+{
+    "userId": "da1346d95e226faefc25a1c32cae4452",
+    "expireTime": "1613724232.828657"
+}
+```
+
+
 
 ### Articles
 
-| 字段名         | 类型 | 描述 |
-| -------------- | ---- | ---- |
-| selfId         |      |      |
-| subTitle       |      |      |
-| articleContent |      |      |
-| classify       |      |      |
+```json
+{
+    "selfId": "da1346d95e226faefc25a1c32cae4452",
+    "userId": "da1346d95e226faefc25a1c32cae4452",
+    "title": "第一篇文章",
+    "subTitle": "这是我的文章",
+    "createTime": "1613724232.828657",
+    "articleContent": "Python 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)] on win32",
+    "commentNum": 2,
+    "comments": [
+        "da1346d95e226faefc25a1c32cae4452",
+        "da1346d95e226faefc25a1c32cae4452"
+    ]
+    "likeNum": 12,
+    "classify": "文章",
+    "tags": ["随心"],
+    "imgs": [
+        "https://pic4.zhimg.com/v2-26766ff1df9bf2dfc355c299a668af7a_is.jpg",
+        "https://pic4.zhimg.com/v2-26766ff1df9bf2dfc355c299a668af7a_is.jpg"
+    ]
+}
+```
+
+
 
 ### Ideas
 
-| 字段名      | 类型 | 描述 |
-| ----------- | ---- | ---- |
-| selfId      |      |      |
-| ideaContent |      |      |
-| classify    |      |      |
+```json
+{
+    "selfId": "da1346d95e226faefc25a1c32cae4452",
+    "userId": "da1346d95e226faefc25a1c32cae4452",
+    "title": "第一篇文章",
+    "ideaContent": "Python 3.9.0 (tags/v3.9.0:9cf6752, Oct  5 2020, 15:34:40) [MSC v.1927 64 bit (AMD64)] on win32",
+    "createTime": "1613724232.828657",
+    "commentNum": 90,
+    "comments": [
+        "da1346d95e226faefc25a1c32cae4452",
+        "da1346d95e226faefc25a1c32cae4452"
+    ]
+    "likeNum": 102,
+    "classify": "文章",
+    "tags": ["随心"],
+    "imgs": [
+        "https://pic4.zhimg.com/v2-26766ff1df9bf2dfc355c299a668af7a_is.jpg",
+        "https://pic4.zhimg.com/v2-26766ff1df9bf2dfc355c299a668af7a_is.jpg"
+    ]
+}
+```
+
+
 
 ### Videos
 
-| 字段名   | 类型 | 描述 |
-| -------- | ---- | ---- |
-| selfId   |      |      |
-| videoUrl |      |      |
+```json
+{
+    "selfId": "da1346d95e226faefc25a1c32cae4452",
+    "userId": "da1346d95e226faefc25a1c32cae4452",
+    "title": "第一个视频",
+    "createTime": "1613724232.828657",
+    "commentNum": 30,
+    "comments": [
+        "da1346d95e226faefc25a1c32cae4452",
+        "da1346d95e226faefc25a1c32cae4452"
+    ]
+    "likeNum": 201,
+    "classify": "视频"
+}
+```
+
+
 
 ### Tags
 
-| 字段名   | 类型 | 描述 |
-| -------- | ---- | ---- |
-| selfId   |      |      |
-| parentId |      |      |
-| tagName  |      |      |
-| type     |      |      |
+```json
+{
+    "selfId": "da1346d95e226faefc25a1c32cae4452",
+    "tagName": "标签"
+}
+```
+
+
 
 ### Imgs
 
-| 字段名   | 类型 | 描述 |
-| -------- | ---- | ---- |
-| selfId   |      |      |
-| parentId |      |      |
-| imgUrl   |      |      |
-| type     | int  |      |
+```json
+{
+    "selfId": "da1346d95e226faefc25a1c32cae4452",
+    "imgUrl": "https://pic4.zhimg.com/v2-26766ff1df9bf2dfc355c299a668af7a_is.jpg"
+}
+```
+
+
 
 ### Comments
 
-| 字段名   | 类型 | 描述 |
-| -------- | ---- | ---- |
-| selfId   |      |      |
-| parentId |      |      |
-| comment  |      |      |
-| type     | int  |      |
-
-### Publish
-
-| 字段名     | 类型 | 描述                      |
-| ---------- | ---- | ------------------------- |
-| selfId     |      | 主键、自增                |
-| parentId   |      | 文章、想法、视频的ID      |
-| createTime |      |                           |
-| userId     |      |                           |
-| Title      |      |                           |
-| commentNum |      | 评论数量                  |
-| likeNum    |      | 点赞数量                  |
-| type       |      | 文章、想法、视频 三者之一 |
+```json
+{
+    "selfId": "da1346d95e226faefc25a1c32cae4452",
+    "comment": "",
+    "createTime": "1613724232.828657",
+    "subComments": [
+        "da1346d95e226faefc25a1c32cae4452",
+        "da1346d95e226faefc25a1c32cae4452",        
+    ],
+    "to": "da1346d95e226faefc25a1c32cae4452",
+    "from": "da1346d95e226faefc25a1c32cae4452"
+}
+```
 
