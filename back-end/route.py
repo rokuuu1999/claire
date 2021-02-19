@@ -119,11 +119,7 @@ def articleimg():
 @app.route('/homepage', methods=['GET'])
 def homepage():
     if request.method == 'GET':
-        outcome_articlelist = database.queryallelements("articles")
-        outcome_taglist = database.queryallelements("tags")
-        outcome = {"code": "200", "msg": "获取成功", "articleList": outcome_articlelist,
-                   "tagList": outcome_taglist}
-        resp = make_response(outcome)
+        #res = json.loads(request.args.get("skipnum"))
+        Publish_query = database.publish_query_all()
+        resp = make_response(Publish_query)
         return resp
-    else:
-        return "fail"

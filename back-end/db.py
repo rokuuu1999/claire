@@ -57,6 +57,11 @@ class db:
         res = mydoc
         return res
 
+    def publish_query_nskips(self):
+        mycol = self.mydb["Publish"]
+        mydoc = mycol.search_set.find()
+        res = mydoc
+        return res
     def queryusername(self, userid):
         mycol = self.mydb["user"]
         myquery = {"userId": userid}
