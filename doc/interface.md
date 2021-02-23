@@ -33,7 +33,7 @@
 
     > 跳转主界面后，请求相关数据
 
-    - path : /homePage
+    - path : /homePage?page=1
 
     - method : Get
 

@@ -1,99 +1,78 @@
-import pymysql
-import datetime
+import pymongo
+from setting import *
 
 
-# Python 面向对象写法
 class db:
     def __init__(self):
-        self.db = None
-        self.cursor = None
         self.connect()
 
     def connect(self):
-        self.db = pymysql.connect(host="localhost", user="root", password="qq229574683", database="clay")
-        # self.db = pymysql.connect(host="localhost", user="root", password="nothing0101.", database="test")
+        self.myclient = pymongo.MongoClient(
+            "mongodb://{user}:{password}@{ip}:27017/{db}".format(user=USER, password=PASSWORD, ip=IP, AUTH_DB))
+        self.mydb = self.myclient["clay"]
 
-    def disconnect(self):
-        self.db.disconnect()
-
-    def login(self, username):
-        cursor = self.db.cursor()
-        sql = "select password,userid,userauthority,avatarUrl from user where username=('%s')" % (username)
-        cursor.execute(sql)
-        res = cursor.fetchone()
-
+    def login(self, userName):
+        mycol = self.mydb["User"]
+        myquery = {"userName": userName}
+        mydoc = mycol.find_one(myquery)
+        res = mydoc
         return res
 
-    def register(self, user_name, user_email, user_password):
-        cursor = self.db.cursor()
-        sql = "INSERT INTO USER(username,email,password) VALUES('%s','%s','%s')" % (
-            user_name, user_email, user_password)
-        cursor.execute(sql)
-        self.db.commit()
+    def register(self, user_id, user_name, user_email, user_password):
+        mycol = self.mydb["User"]
+        mydict = {"userId": user_id, "userName": user_name, "email": user_email, "password": user_password,
+                  "avatarUrl": "https://pic2.zhimg.com/da8e974dc_xll.jpg", "userAuthority": 1, "like": [],
+                  "comments": [],
+                  "publish": []}
+        mycol.insert_one(mydict)
 
     def cookies(self, userid, time):
-        cursor = self.db.cursor()
-        sql = "INSERT INTO COOKIES(userid,time) VALUES('%s',%s)  ON DUPLICATE KEY UPDATE time = time" % (userid, time)
-        cursor.execute(sql)
-        self.db.commit()
+        mycol = self.mydb["Cookies"]
+        newCookie = {"userId": userid, "expireTime": time}
+        mycol.update({"userId": userid}, newCookie, True)
+
+    def cookies_query(self, userid):
+        mycol = self.mydb["Cookies"]
+        mydict = {"userId": userid}
+        return mycol.find_one(mydict)
 
     def article(self, aid):
-        cursor = self.db.cursor()
-        sql = "SELECT AID,ARTICLETITLE,SUBTITLE,ARTICLECONTENT,CREATETIME,COMMENTNUM,LIKENUM,CLASSIFY FROM ARTICLES WHERE AID = (%s)" % (
-            aid)
-        cursor.execute(sql)
-        res = cursor.fetchone()
+        mycol = self.mydb["Articles"]
+        myquery = {"selfId": aid}
+        mydoc = mycol.find(myquery)
+        res = mydoc
         return res
 
     def tags(self, tid):
-        cursor = self.db.cursor()
-        sql = "SELECT AID,TAG FROM TAGS WHERE TID=('%s')" % (tid)
-        cursor.execute(sql)
-        res = cursor.fetchall()
+        mycol = self.mydb["Tags"]
+        myquery = {"selfId": tid}
+        mydoc = mycol.find(myquery)
+        res = mydoc
         return res
 
     def articleimg(self, iid):
-        cursor = self.db.cursor()
-        sql = "SELECT AID , IMG FROM ARTICLEIMG WHERE IID = ('%s')" % (iid)
-        cursor.execute(sql)
-        res = cursor.fetchone()
+        mycol = self.mydb["Imgs"]
+        myquery = {"selfId": iid}
+        mydoc = mycol.find(myquery)
+        res = mydoc
         return res
 
-    def queryusername(self, userid):
-        cursor = self.cursor()
-        sql = "SELECT USERNAME FROM USER WHERE USERID = ('%s')" % userid
-        cursor.execute(sql)
-        username = cursor.fetchone()
+    def publish_query_nskips(self, num):
+        mycol = self.mydb["Publish"]
+        res = mycol.find().sort("createTime", -1).skip(num).limit(5)
+        publishList = []
+        for item in res:
+            publishList.append(item)
+        return publishList
+
+    def query_username(self, userid):
+        mycol = self.mydb["user"]
+        myquery = {"userId": userid}
+        mydoc = mycol.find(myquery, {"userName": 1})
+        username = mydoc
         return username
 
     def queryallelements(self, database_name):
         sql = "SELECT * FROM (%s)" % database_name
         elements = self.get_dict_data_sql(sql)
         return elements
-
-    def get_index_dict(self, cursor):
-        """
-        获取数据库对应表中的字段名
-        """
-        index_dict = dict()
-        index = 0
-        for desc in cursor.description:
-            index_dict[desc[0]] = index
-            index = index + 1
-        return index_dict
-
-    def get_dict_data_sql(self, sql):
-        """
-        运行sql语句，获取结果，并根据表中字段名，转化成dict格式（默认是tuple格式）
-        """
-        cursor = self.db.cursor()
-        cursor.execute(sql)
-        data = cursor.fetchall()
-        index_dict = self.get_index_dict(cursor)
-        res = []
-        for datai in data:
-            resi = dict()
-            for indexi in index_dict:
-                resi[indexi] = datai[index_dict[indexi]]
-            res.append(resi)
-        return res
