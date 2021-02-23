@@ -48,6 +48,7 @@
 import BaseInput from "@/components/base/BaseInput";
 import Menus from "@/components/base/Menus";
 import List from "@/components/base/List";
+import { getCookie } from "@/assets/js/GlobalFunction";
 
 export default {
   name: "AppBar",
@@ -153,11 +154,10 @@ export default {
     }
   },
   mounted() {
-    if (this.getCookie("userId") !== "") {
+    if (getCookie("userId") !== "") {
       this.axios
         .get("/login")
         .then(res => {
-          console.log(res);
           if (res.data.code === 200) {
             this.$store.state.authed = true;
             this.$store.state.avatarUrl = window.localStorage.getItem(

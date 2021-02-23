@@ -49,7 +49,6 @@ export default {
       this.axios
         .post("/login", {
           username: this.items.username.value,
-          email: this.items.email.value,
           password: this.items.password.value
         })
         .then(res => {

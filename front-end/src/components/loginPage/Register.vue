@@ -27,7 +27,7 @@ export default {
         },
         {
           title: "Submit",
-          action: this.login
+          action: this.register
         }
       ]
     };
@@ -43,7 +43,6 @@ export default {
         })
         .then(res => {
           // 跳转
-          console.log(res);
           if (res.data.code === 200) {
             this.$router.push({ path: "/login" });
           }

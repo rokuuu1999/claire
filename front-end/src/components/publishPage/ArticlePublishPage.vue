@@ -11,6 +11,7 @@
       class="content-edit-area"
       codeStyle="magula"
       ref="md"
+      @imgAdd="$imgAdd"
     ></mavon-editor>
     <div class="feature-edit-area">
       <div class="feature-set">
@@ -131,7 +132,8 @@ export default {
     $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
       var formdata = new FormData();
-      formdata.append("image", $file);
+      formdata.append("file", $file);
+      formdata.append("type", String($file.name).split(".")[1]);
       this.axios({
         url: "/uploadFile",
         method: "post",
@@ -144,7 +146,7 @@ export default {
          * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
          * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 ``
          */
-        this.$refs.md.$img2Url(pos, res.data.url);
+        this.$refs.md.$img2Url(pos, res.data);
       });
     }
   }

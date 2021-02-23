@@ -174,6 +174,7 @@
 <script>
 import ArticleCard from "@/components/homePage/ArticleCard";
 import Pagination from "@/components/base/Pagination";
+import { throttle } from "@/assets/js/GlobalFunction";
 
 export default {
   name: "HomePage",
@@ -354,14 +355,11 @@ export default {
     }
   },
   created: function() {
-    window.addEventListener("scroll", this.throttle(this.isScrollBottom, 1000));
+    window.addEventListener("scroll", throttle(this.isScrollBottom, 1000));
   },
   mounted: function() {},
   destroyed() {
-    window.removeEventListener(
-      "scroll",
-      this.throttle(this.isScrollBottom, 1000)
-    );
+    window.removeEventListener("scroll", throttle(this.isScrollBottom, 1000));
   }
 };
 </script>
