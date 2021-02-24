@@ -73,8 +73,7 @@ const routes = [
             children: [
               {
                 path: "/",
-                name: "security",
-                component: SecuritySetting
+                redirect: "security"
               },
               {
                 path: "security",
@@ -95,8 +94,7 @@ const routes = [
             children: [
               {
                 path: "/",
-                name: "FocusUser",
-                component: FocusUser
+                redirect: "user"
               },
               {
                 path: "user",

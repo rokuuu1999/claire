@@ -115,15 +115,9 @@ export default {
           alarm: false
         },
         {
-          title: "个人中心",
-          icon: "account-details",
-          link: "/self",
-          alarm: true
-        },
-        {
           title: "个人设置",
           icon: "account-cog",
-          link: "/self/setting",
+          link: "/self/setting/security",
           alarm: true
         }
       ]

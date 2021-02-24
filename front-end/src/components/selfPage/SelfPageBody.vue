@@ -113,7 +113,7 @@ export default {
 .main-content-navbar {
   display: block;
   width: 100%;
-  height: 5%;
+  height: 10%;
 }
 .main-content-body {
   display: block;
