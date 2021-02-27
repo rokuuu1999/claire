@@ -67,13 +67,30 @@ class db:
         return publishList
 
     def query_username(self, userid):
-        mycol = self.mydb["user"]
+        mycol = self.mydb["User"]
         myquery = {"userId": userid}
         mydoc = mycol.find(myquery, {"userName": 1})
         username = mydoc
         return username
 
-    def queryallelements(self, database_name):
-        sql = "SELECT * FROM (%s)" % database_name
-        elements = self.get_dict_data_sql(sql)
-        return elements
+    def query_tagList(self):
+        mycol = self.mydb["Tags"]
+        tagList = mycol.find().pretty()
+        return tagList
+
+    def thinking_insert(self, createTime, userId, Title, ideaContent, classify, tags):
+        mycol = self.mydb["Ideas"]
+        mycol.insert({"createTime": createTime, "userId": userId, "Title": Title, "ideaContent": ideaContent
+                         , "classify": classify, "tags": tags})
+
+    def publish_insert(self, parentId, createTime, type):
+        mycol = self.mydb["Publish"]
+        mycol.insert({"parentId": parentId, "createTime": createTime, "type": type})
+
+    def article_insert(self, createTime, userId, Title, subTitle, articleContent, classify, tags):
+        mycol = self.mydb["Articles"]
+        mycol.insert({"createTime": createTime, "userId": userId, "Title": Title,
+                      "subTitle": subTitle, "articleContent": articleContent,
+                      "classify": classify, "tags": tags})
+
+

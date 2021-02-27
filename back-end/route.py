@@ -70,7 +70,7 @@ def register():
             resp = make_response(outcome)
             return resp
         else:
-            outcome = {"code": 200, "msg": "注册失败"}
+            outcome = {"code": 500, "msg": "注册失败"}
             resp = make_response(outcome)
             return resp
 
@@ -84,10 +84,15 @@ def articles():
         outcome = {"aid": result[0], "articleTile": result[1], "subTitle": result[2],
                    "articleContent": result[3], "userId": result[4], "createtime": result[5],
                    "commentNum": result[6], "likeNum": result[7], "classify": result[8]}
+        result = {"code": 200, "msg": "请求成功","contain":outcome}
+        resp = make_response(result)
+        return resp
+
+
+    else:
+        outcome = {"code": 500, "msg": "请求失败"}
         resp = make_response(outcome)
         return resp
-    else:
-        return "fail"
 
 
 @app.route('/tags', methods=['GET', 'POST'])
@@ -97,10 +102,13 @@ def tags():
         tid = res['tid']
         result = database.tags(tid)
         outcome = {"tid": result[0], "tagname": result[1]}
-        resp = make_response(outcome)
+        result = {"code": 200, "msg": "请求成功", "contain": outcome}
+        resp = make_response(result)
         return resp
     else:
-        return "fail"
+        outcome = {"code": 500, "msg": "请求失败"}
+        resp = make_response(outcome)
+        return resp
 
 
 @app.route('/articleImg', methods=['GET', 'POST'])
@@ -110,10 +118,13 @@ def articleImg():
         iid = res['IID']
         result = database.articleimg(iid)
         outcome = {"IID": result[0], "imgurl": result[1]}
-        resp = make_response(outcome)
+        result = {"code": 200, "msg": "请求成功", "contain": outcome}
+        resp = make_response(result)
         return resp
     else:
-        return "fail"
+        outcome = {"code": 500, "msg": "请求失败"}
+        resp = make_response(outcome)
+        return resp
 
 
 @app.route('/homepage', methods=['GET'])
@@ -121,10 +132,60 @@ def homepage():
     if request.method == 'GET':
         page = json.loads(request.args.get("page"))
         publishList = database.publish_query_nskips(page * 5)
-        return make_response(publishList)
+        tagList = database.query_tagList()
+        result = {"code": 200, "msg": "请求成功", "publishList": publishList,"tagList": tagList}
+        resp = make_response(result)
+        return resp
+    else :
+        outcome = {"code": 500, "msg": "请求失败"}
+        resp = make_response(outcome)
+        return resp
+
+@app.route('/publishIdea', methods=['POST'])
+def thinking():
+    if request.method == 'POST':
+
+        createTime = request.form.get("createTime")
+        userId = request.form.get("userId")
+        Title = request.form.get("Title")
+        ideaContent = request.form.get("ideaContent")
+        classify = request.form.get("classify")
+        tags = request.form.get("tags")
+        document = database.thinking_insert(createTime,userId,Title,
+                                            ideaContent,classify,tags)
+        type = 1
+        database.publish_insert(document._id,createTime,type)
+        result = {"code":200,"mag":"插入成功"}
+        return make_response(result)
+    else:
+        outcome = {"code": 500, "msg": "想法插入失败"}
+        resp = make_response(outcome)
+        return resp
+
+@app.route('/publishArticle', methods=['POST'])
+def blue_book():
+    if request.method == 'POST':
+        createTime = request.form.get("createTime")
+        userId = request.form.get("userId")
+        Title = request.form.get("Title")
+        subTitle = request.form.get("subTitle")
+        articleContent = request.form.get("articleContent")
+        classify = request.form.get("classify")
+        tags = request.form.get("tags")
+        document = database.article_insert(createTime, userId, Title,subTitle,articleContent, classify, tags)
+        type = 0
+        database.publish_insert(document._id, createTime, type)
+        result = {"code": 200, "mag": "插入成功"}
+        return make_response(result)
+    else:
+        outcome = {"code": 500, "msg": "写入文章失败"}
+        resp = make_response(outcome)
+        return resp
 
 
-@app.route('/uploadFile', methods=['GET'])
+@app.route('/uploadFile', methods=['POST'])
 def upload():
-    if request.method == 'GET':
+    if request.method == 'POST':
+        s1 = 0
+
        
