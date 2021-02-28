@@ -28,7 +28,11 @@
       <v-icon color="red" v-else>mdi-alert-circle</v-icon>
       <div>设置登录密码</div>
       <div>
-        <base-input title="请输入密码" icon="" hide-details="true"></base-input>
+        <base-input
+          title="请输入密码"
+          icon=""
+          :hide-details="true"
+        ></base-input>
       </div>
       <v-btn depressed rounded color="primary">确认修改</v-btn>
     </div>
@@ -37,7 +41,7 @@
 </template>
 
 <script>
-import BaseInput from "@/components/BaseInput";
+import BaseInput from "@/components/base/BaseInput";
 export default {
   name: "SecuritySetting",
   components: { BaseInput },
