@@ -158,7 +158,7 @@ def thinking():
         type = 1
         id = document[0]
         database.publish_insert(id, createTime, type)
-        result = {"code": 200, "mag": "插入成功"}
+        result = {"code": 200, "msg": "插入成功"}
         return make_response(result)
     else:
         outcome = {"code": 500, "msg": "想法插入失败"}
@@ -181,7 +181,7 @@ def blue_book():
         type = 0
         id = document[0]
         database.publish_insert(id, createTime, type)
-        result = {"code": 200, "mag": "插入成功"}
+        result = {"code": 200, "msg": "插入成功"}
         return make_response(result)
     else:
         outcome = {"code": 500, "msg": "写入文章失败"}
@@ -200,7 +200,7 @@ def upload():
         file.save(filePath)
         fileURL = "http://kodo.wendau.com/" + kodo.upload(fileName)
         os.remove(filePath)
-        result = {"code": 200, "mag": "上传成功", "fileURL": fileURL}
+        result = {"code": 200, "msg": "上传成功", "fileURL": fileURL}
         resp = make_response(result)
         return resp
     else:
