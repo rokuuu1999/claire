@@ -1,11 +1,12 @@
 import json
 from app import app, database
-from flask import request, make_response
+from flask import make_response
 from function import *
-from datetime import datetime
 from setting import *
 from flask import request
 import time
+import uuid
+import os
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -33,7 +34,7 @@ def login():
         res = json.loads(request.get_data(as_text=True))
 
         user_name = res['username']
-        user_email = res['email']
+        # user_email = res['email']
         user_password = res['password']
         data = database.login(user_name)
         if data["password"] == user_password:
@@ -60,7 +61,7 @@ def register():
         user_password = res['password']
         user_repassword = res['repassword']
         user_id = md5(user_name + PRIVATE_KEY)
-        if database.queryusername(user_id) == user_name:
+        if database.query_username(user_id) == user_name:
             outcome = {"code": 500, "msg": "用户名重复"}
             resp = make_response(outcome)
             return resp
@@ -127,5 +128,13 @@ def homepage():
 @app.route('/uploadFile', methods=['POST'])
 def upload():
     if request.method == 'POST':
-        print(request.files.get("pic"))
-        return "ss"
+        kodo = qiniu()
+        file = request.files.get("file")
+        fileType = request.form.get("type")
+        fileName = "{name}.{type}".format(name=str(uuid.uuid4()), type=fileType)
+        filePath = "./tmp/" + fileName
+
+        file.save(filePath)
+        fileURL = "http://kodo.wendau.com/" + kodo.upload(fileName)
+        os.remove(filePath)
+        return fileURL

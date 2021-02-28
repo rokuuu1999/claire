@@ -8,7 +8,7 @@ class db:
 
     def connect(self):
         self.myclient = pymongo.MongoClient(
-            "mongodb://{user}:{password}@{ip}:27017/{db}".format(user=USER, password=PASSWORD, ip=IP, AUTH_DB))
+            "mongodb://{user}:{password}@{ip}:27017/{db}".format(user=USER, password=PASSWORD, ip=IP, db=AUTH_DB))
         self.mydb = self.myclient["clay"]
 
     def login(self, userName):
@@ -67,10 +67,13 @@ class db:
 
     def query_username(self, userid):
         mycol = self.mydb["user"]
-        myquery = {"userId": userid}
-        mydoc = mycol.find(myquery, {"userName": 1})
-        username = mydoc
-        return username
+
+        mydoc = mycol.find_one({"userId": userid})
+        if mydoc != None:
+            username = mydoc["userName"]
+            return username
+        else:
+            return ""
 
     def queryallelements(self, database_name):
         sql = "SELECT * FROM (%s)" % database_name
