@@ -197,8 +197,13 @@ def upload():
         fileType = request.form.get("type")
         fileName = "{name}.{type}".format(name=str(uuid.uuid4()), type=fileType)
         filePath = "./tmp/" + fileName
-
         file.save(filePath)
         fileURL = "http://kodo.wendau.com/" + kodo.upload(fileName)
         os.remove(filePath)
-        return fileURL
+        result = {"code": 200, "mag": "上传成功", "fileURL": fileURL}
+        resp = make_response(result)
+        return resp
+    else:
+        outcome = {"code": 500, "msg": "上传失败"}
+        resp = make_response(outcome)
+        return resp
