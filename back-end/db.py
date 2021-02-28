@@ -1,6 +1,5 @@
-import pymysql
-import datetime
 import pymongo
+from setting import *
 
 
 # Python 面向对象写法
@@ -9,7 +8,8 @@ class db:
         self.connect()
 
     def connect(self):
-        self.myclient = pymongo.MongoClient("mongodb://root:rokuuu1999@121.4.74.77:27017/admin")
+        self.myclient = pymongo.MongoClient(
+            "mongodb://{user}:{password}@{ip}:27017/{db}".format(user=USER, password=PASSWORD, ip=IP, db=AUTH_DB))
         self.mydb = self.myclient["clay"]
 
     def login(self, userName):
@@ -92,5 +92,3 @@ class db:
         mycol.insert({"createTime": createTime, "userId": userId, "Title": Title,
                       "subTitle": subTitle, "articleContent": articleContent,
                       "classify": classify, "tags": tags})
-
-
