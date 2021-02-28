@@ -1,11 +1,12 @@
 import json
 from app import app, database
-from flask import request, make_response
+from flask import make_response
 from function import *
-from datetime import datetime
 from setting import *
 from flask import request
 import time
+import os
+import uuid
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -59,8 +60,8 @@ def register():
         user_email = res['email']
         user_password = res['password']
         user_repassword = res['repassword']
-        user_id = md5(user_name + private_key)
-        if database.queryusername(user_id) == user_name:
+        user_id = md5(user_name + PRIVATE_KEY)
+        if database.query_username(user_id) == user_name:
             outcome = {"code": 500, "msg": "用户名重复"}
             resp = make_response(outcome)
             return resp
@@ -84,7 +85,7 @@ def articles():
         outcome = {"aid": result[0], "articleTile": result[1], "subTitle": result[2],
                    "articleContent": result[3], "userId": result[4], "createtime": result[5],
                    "commentNum": result[6], "likeNum": result[7], "classify": result[8]}
-        result = {"code": 200, "msg": "请求成功","contain":outcome}
+        result = {"code": 200, "msg": "请求成功", "contain": outcome}
         resp = make_response(result)
         return resp
 
@@ -133,13 +134,14 @@ def homepage():
         page = json.loads(request.args.get("page"))
         publishList = database.publish_query_nskips(page * 5)
         tagList = database.query_tagList()
-        result = {"code": 200, "msg": "请求成功", "publishList": publishList,"tagList": tagList}
+        result = {"code": 200, "msg": "请求成功", "publishList": publishList, "tagList": tagList}
         resp = make_response(result)
         return resp
-    else :
+    else:
         outcome = {"code": 500, "msg": "请求失败"}
         resp = make_response(outcome)
         return resp
+
 
 @app.route('/publishIdea', methods=['POST'])
 def thinking():
@@ -151,16 +153,17 @@ def thinking():
         ideaContent = request.form.get("ideaContent")
         classify = request.form.get("classify")
         tags = request.form.get("tags")
-        document = database.thinking_insert(createTime,userId,Title,
-                                            ideaContent,classify,tags)
+        document = database.thinking_insert(createTime, userId, Title,
+                                            ideaContent, classify, tags)
         type = 1
-        database.publish_insert(document._id,createTime,type)
-        result = {"code":200,"mag":"插入成功"}
+        database.publish_insert(document._id, createTime, type)
+        result = {"code": 200, "mag": "插入成功"}
         return make_response(result)
     else:
         outcome = {"code": 500, "msg": "想法插入失败"}
         resp = make_response(outcome)
         return resp
+
 
 @app.route('/publishArticle', methods=['POST'])
 def blue_book():
@@ -172,7 +175,7 @@ def blue_book():
         articleContent = request.form.get("articleContent")
         classify = request.form.get("classify")
         tags = request.form.get("tags")
-        document = database.article_insert(createTime, userId, Title,subTitle,articleContent, classify, tags)
+        document = database.article_insert(createTime, userId, Title, subTitle, articleContent, classify, tags)
         type = 0
         database.publish_insert(document._id, createTime, type)
         result = {"code": 200, "mag": "插入成功"}
@@ -186,6 +189,13 @@ def blue_book():
 @app.route('/uploadFile', methods=['POST'])
 def upload():
     if request.method == 'POST':
-        s1 = 0
+        kodo = qiniu()
+        file = request.files.get("file")
+        fileType = request.form.get("type")
+        fileName = "{name}.{type}".format(name=str(uuid.uuid4()), type=fileType)
+        filePath = "./tmp/" + fileName
 
-       
+        file.save(filePath)
+        fileURL = "http://kodo.wendau.com/" + kodo.upload(fileName)
+        os.remove(filePath)
+        return fileURL
