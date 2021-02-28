@@ -70,7 +70,11 @@ class db:
         mycol = self.mydb["User"]
         myquery = {"userId": userid}
         mydoc = mycol.find(myquery, {"userName": 1})
-        username = mydoc
+        if mydoc != None:
+            username = mydoc["userName"]
+            return username
+        else:
+            return ""
         return username
 
     def query_tagList(self):
