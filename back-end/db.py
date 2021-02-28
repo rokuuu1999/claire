@@ -86,13 +86,20 @@ class db:
         mycol = self.mydb["Ideas"]
         mycol.insert({"createTime": createTime, "userId": userId, "Title": Title, "ideaContent": ideaContent
                          , "classify": classify, "tags": tags})
+        id = mycol.find({"createTime": createTime})
+        return id
 
     def publish_insert(self, parentId, createTime, type):
         mycol = self.mydb["Publish"]
         mycol.insert({"parentId": parentId, "createTime": createTime, "type": type})
+        id = mycol.find({"createTime": createTime})
+        return id
+
 
     def article_insert(self, createTime, userId, Title, subTitle, articleContent, classify, tags):
         mycol = self.mydb["Articles"]
         mycol.insert({"createTime": createTime, "userId": userId, "Title": Title,
-                      "subTitle": subTitle, "articleContent": articleContent,
-                      "classify": classify, "tags": tags})
+                  "subTitle": subTitle, "articleContent": articleContent,
+                  "classify": classify, "tags": tags})
+        id = mycol.find({"createTime": createTime})
+        return id

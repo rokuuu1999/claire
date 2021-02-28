@@ -156,7 +156,8 @@ def thinking():
         document = database.thinking_insert(createTime, userId, Title,
                                             ideaContent, classify, tags)
         type = 1
-        database.publish_insert(document._id, createTime, type)
+        id = document[0]
+        database.publish_insert(id, createTime, type)
         result = {"code": 200, "mag": "插入成功"}
         return make_response(result)
     else:
@@ -175,9 +176,11 @@ def blue_book():
         articleContent = request.form.get("articleContent")
         classify = request.form.get("classify")
         tags = request.form.get("tags")
-        document = database.article_insert(createTime, userId, Title, subTitle, articleContent, classify, tags)
+        document = database.article_insert(createTime, userId, Title, subTitle,
+                                           articleContent, classify, tags)
         type = 0
-        database.publish_insert(document._id, createTime, type)
+        id = document[0]
+        database.publish_insert(id, createTime, type)
         result = {"code": 200, "mag": "插入成功"}
         return make_response(result)
     else:
