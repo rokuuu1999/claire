@@ -20,6 +20,7 @@
           <article-card
             :sub-title="item.subTitle"
             :pics="item.pics"
+            :cover="item.cover"
             v-if="item.type === 2"
           ></article-card>
         </template>
@@ -278,7 +279,8 @@ export default {
             "http://kodo.wendau.com/icon1.png",
             "http://kodo.wendau.com/icon1.png",
             "http://kodo.wendau.com/icon1.png"
-          ]
+          ],
+          cover: "http://kodo.wendau.com/%E7%9B%B8%E4%BF%A1%E6%9C%AA%E6%9D%A5.jpg"
         }
       ],
       tags: [
