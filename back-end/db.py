@@ -37,6 +37,11 @@ class db:
         mydict = {"userId": userid}
         return mycol.find_one(mydict)
 
+    def cookies_query_expiretime(self, expiretime):
+        mycol = self.mydb["Cookies"]
+        mydict = {"expireTime": expiretime}
+        return mycol.find_one(mydict)
+
     def article(self, aid):
         mycol = self.mydb["Articles"]
         myquery = {"selfId": aid}
@@ -82,10 +87,10 @@ class db:
         tagList = mycol.find().pretty()
         return tagList
 
-    def thinking_insert(self, createTime, userId, Title, ideaContent, classify, tags):
+    def thinking_insert(self, createTime, userId, ideaContent, classify, tags, imgs):
         mycol = self.mydb["Ideas"]
-        mycol.insert({"createTime": createTime, "userId": userId, "Title": Title, "ideaContent": ideaContent
-                         , "classify": classify, "tags": tags})
+        mycol.insert({"createTime": createTime, "userId": userId, "ideaContent": ideaContent
+                         , "classify": classify, "tags": tags, "imgs": imgs})
         id = mycol.find({"createTime": createTime})
         return id
 
@@ -95,11 +100,10 @@ class db:
         id = mycol.find({"createTime": createTime})
         return id
 
-
-    def article_insert(self, createTime, userId, Title, subTitle, articleContent, classify, tags):
+    def article_insert(self, createTime, userId, Title, subTitle, articleContent, classify, tags, cover):
         mycol = self.mydb["Articles"]
         mycol.insert({"createTime": createTime, "userId": userId, "Title": Title,
-                  "subTitle": subTitle, "articleContent": articleContent,
-                  "classify": classify, "tags": tags})
+                      "subTitle": subTitle, "articleContent": articleContent,
+                      "classify": classify, "tags": tags, "cover": cover})
         id = mycol.find({"createTime": createTime})
         return id
