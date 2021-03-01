@@ -87,10 +87,12 @@ class db:
         tagList = mycol.find().pretty()
         return tagList
 
-    def thinking_insert(self, createTime, userId, ideaContent, classify, tags, imgs):
+    def thinking_insert(self, createTime, userId, ideaContent, classify, tags,
+                        pics,authorName,avatarURL):
         mycol = self.mydb["Ideas"]
         mycol.insert({"createTime": createTime, "userId": userId, "ideaContent": ideaContent
-                         , "classify": classify, "tags": tags, "imgs": imgs})
+                         , "classify": classify, "tags": tags, "pics": pics ,"authorName":authorName,
+                      "avatarURL":avatarURL})
         id = mycol.find({"createTime": createTime})
         return id
 
@@ -100,10 +102,19 @@ class db:
         id = mycol.find({"createTime": createTime})
         return id
 
-    def article_insert(self, createTime, userId, Title, subTitle, articleContent, classify, tags, cover):
+    def video_insert(self,title,videoUrl,userId,authorName,avatarURL,createTime,classify,tags,cover):
+        mycol = self.mydb["Videos"]
+        mycol.insert({"createTime":createTime,"userId": userId,"authorName":authorName,"videoUrl":videoUrl,"title":title,
+                      "classify":classify,"tags":tags,"cover":cover})
+        id = mycol.find({"createTime":createTime})
+        return id
+
+    def article_insert(self, createTime, userId, title, subTitle, articleContent, classify, tags
+                       , cover,pics,authorName,avatarURL):
         mycol = self.mydb["Articles"]
-        mycol.insert({"createTime": createTime, "userId": userId, "Title": Title,
+        mycol.insert({"createTime": createTime, "userId": userId, "Title": title,
                       "subTitle": subTitle, "articleContent": articleContent,
-                      "classify": classify, "tags": tags, "cover": cover})
+                      "classify": classify, "tags": tags, "cover": cover,"pics":pics,"authorName":authorName,
+                      "avatarURL":avatarURL})
         id = mycol.find({"createTime": createTime})
         return id

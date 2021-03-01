@@ -149,16 +149,20 @@ def thinking():
         res = request.cookies.get('expireTime')
         userId =str( database.cookies_query_expiretime(res) )
         createTime = request.form.get("createTime")
+        authorName = request.form.get("authorName")
+        avatarURL = request.form.get("avatarURL")
+        pics = request.form.get("pics")
         ideaContent = request.form.get("ideaContent")
         classify = request.form.get("classify")
         tags = request.form.get("tags")
         imgs = request.form.get("imgs")
         document = database.thinking_insert(createTime, userId,
-                                            ideaContent, classify, tags, imgs)
+                                            ideaContent, classify, tags,
+                                            authorName,avatarURL,pics)
         type = 1
         id = document[0]
         database.publish_insert(id, createTime, type)
-        result = {"code": 200, "msg": "插入成功"}
+        result = {"code": 200, "msg": "插入想法成功"}
         return make_response(result)
     else:
         outcome = {"code": 500, "msg": "想法插入失败"}
@@ -172,7 +176,9 @@ def blue_book():
         res = request.cookies.get('expireTime')
         userId =str( database.cookies_query_expiretime(res) )
         createTime = request.form.get("createTime")
-
+        pics = request.form.get("pics")
+        authorName = request.form.get("authorName")
+        avatarURL = request.form.get("avatarURL")
         title = request.form.get("title")
         subTitle = request.form.get("subTitle")
         articleContent = request.form.get("articleContent")
@@ -180,17 +186,43 @@ def blue_book():
         tags = request.form.get("tags")
         cover = request.form.get("cover")
         document = database.article_insert(createTime, userId, title, subTitle,
-                                           articleContent, classify, tags, cover)
+                                           articleContent, classify, tags, cover,
+                                           pics,authorName,avatarURL)
         type = 0
         id = document[0]
         database.publish_insert(id, createTime, type)
-        result = {"code": 200, "msg": "插入成功"}
+        result = {"code": 200, "msg": "插入文章成功"}
         return make_response(result)
     else:
         outcome = {"code": 500, "msg": "写入文章失败"}
         resp = make_response(outcome)
         return resp
 
+@app.route('/publishVideo', methods=['POST'])
+def movie_camera() :
+    if request.method == 'POST':
+        res = request.cookies.get('expireTime')
+        userId =str( database.cookies_query_expiretime(res) )
+        createTime = request.form.get("createTime")
+        authorName = request.form.get("authorName")
+        videoUrl = request.form.get("videoUrl")
+        title = request.form.get("title")
+        classify = request.form.get("classify")
+        tags = request.form.get("tags")
+        avatarURL = request.form.get("avatarURL")
+        cover = request.form.get("cover")
+        document = database.video_insert(createTime, userId, title,
+                                           classify, tags, cover,
+                                           authorName,videoUrl,avatarURL)
+        type = 2
+        id = document[0]
+        database.publish_insert(id, createTime, type)
+        result = {"code": 200, "msg": "插入video成功"}
+        return make_response(result)
+    else:
+        outcome = {"code": 500, "msg": "写入video失败"}
+        resp = make_response(outcome)
+        return resp
 
 @app.route('/uploadFile', methods=['POST'])
 def upload():
@@ -203,10 +235,10 @@ def upload():
         file.save(filePath)
         fileURL = "http://kodo.wendau.com/" + kodo.upload(fileName)
         os.remove(filePath)
-        result = {"code": 200, "msg": "上传成功", "fileURL": fileURL}
+        result = {"code": 200, "msg": "上传文件成功", "fileURL": fileURL}
         resp = make_response(result)
         return resp
     else:
-        outcome = {"code": 500, "msg": "上传失败"}
+        outcome = {"code": 500, "msg": "上传文件失败"}
         resp = make_response(outcome)
         return resp
