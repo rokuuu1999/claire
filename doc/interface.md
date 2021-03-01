@@ -56,6 +56,7 @@
                         avatarURL : "" ,
                         createTime : "",
                         classify : "" ,
+                        cover : "",
                         tags : [
                             
                         ],
@@ -66,7 +67,6 @@
                     {
                         id : "" ,
                         type : "idea",
-                        title : "" ,
                         ideaContent : "" ,
                         userId : "" ,
                         authorName : "" ,
