@@ -34,7 +34,7 @@ def login():
         res = json.loads(request.get_data(as_text=True))
 
         user_name = res['username']
-        user_email = res['email']
+
         user_password = res['password']
         data = database.login(user_name)
         if data["password"] == user_password:
@@ -146,15 +146,15 @@ def homepage():
 @app.route('/publishIdea', methods=['POST'])
 def thinking():
     if request.method == 'POST':
-
+        res = request.cookies.get('expireTime')
+        userId =str( database.cookies_query_expiretime(res) )
         createTime = request.form.get("createTime")
-        userId = request.form.get("userId")
-        Title = request.form.get("Title")
         ideaContent = request.form.get("ideaContent")
         classify = request.form.get("classify")
         tags = request.form.get("tags")
-        document = database.thinking_insert(createTime, userId, Title,
-                                            ideaContent, classify, tags)
+        imgs = request.form.get("imgs")
+        document = database.thinking_insert(createTime, userId,
+                                            ideaContent, classify, tags, imgs)
         type = 1
         id = document[0]
         database.publish_insert(id, createTime, type)
@@ -169,15 +169,18 @@ def thinking():
 @app.route('/publishArticle', methods=['POST'])
 def blue_book():
     if request.method == 'POST':
+        res = request.cookies.get('expireTime')
+        userId =str( database.cookies_query_expiretime(res) )
         createTime = request.form.get("createTime")
-        userId = request.form.get("userId")
-        Title = request.form.get("Title")
+
+        title = request.form.get("title")
         subTitle = request.form.get("subTitle")
         articleContent = request.form.get("articleContent")
         classify = request.form.get("classify")
         tags = request.form.get("tags")
-        document = database.article_insert(createTime, userId, Title, subTitle,
-                                           articleContent, classify, tags)
+        cover = request.form.get("cover")
+        document = database.article_insert(createTime, userId, title, subTitle,
+                                           articleContent, classify, tags, cover)
         type = 0
         id = document[0]
         database.publish_insert(id, createTime, type)
