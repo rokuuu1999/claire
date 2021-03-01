@@ -5,18 +5,17 @@
 
     - parameter : 
         - userName : String
-        - email : String
         - password : String
     - 返回值
            - 成功：`{code:200 , msg:""}`
         - 失败：`{code:500 , msg:""}`
-
-    > method : GET
-
-    - 返回值
+    
+> method : GET
+    
+- 返回值
            - 成功：`{code:200 , msg:""}`
         - 失败：`{code:500 , msg:""}`
-
+    
 - register
     - path : /register
     - method : Post
@@ -52,10 +51,15 @@
                         title : "" ,
                         subTitle : "" ,
                         articleContent : "" ,
-                        userId : "" ,
+                        userid : "",
+                        authorName : "" ,
+                        avatarURL : "" ,
                         createTime : "",
                         classify : "" ,
-                        tags:[
+                        tags : [
+                            
+                        ],
+                        pics : [
                             
                         ]
                     },
@@ -65,9 +69,14 @@
                         title : "" ,
                         ideaContent : "" ,
                         userId : "" ,
+                        authorName : "" ,
+                        avatarURL : "" ,
                         createTime : "",
                         classify : "" ,
-                        tags:[
+                        tags : [
+                            
+                        ],
+                        pics : [
                             
                         ]
                     },
@@ -77,7 +86,14 @@
                         title : "" ,
                         videoUrl : "",
                         userId : "" ,
+                        authorName : "" ,
+                        avatarURL : "" ,
                         createTime : "",
+                        classify : "" ,
+                        tags : [
+                            
+                        ],
+                        cover : "" 
             
                     }
                 ] ,
@@ -123,7 +139,17 @@
         - 成功：`{code:200 , msg:""}`
         - 失败：`{code:500 , msg:""}`
     
-- 上传视频​/图片​ (待定)
+- 发表视频:movie_camera:
+
+    - path : /publishVideo
+    - method : POST
+    - paramter :
+        - createTime     
+        - title 
+        - classify
+        - tags : Array
+
+- 上传视频​/图片​
     - path :  /uploadFile
     - method : POST
     - paramter : 
