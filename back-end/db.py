@@ -72,7 +72,7 @@ class db:
         return publishList
 
     def query_username(self, userid):
-        mycol = self.mydb["User"]
+        mycol = self.mydb["UserInfo"]
         myquery = {"userId": userid}
         mydoc = mycol.find(myquery, {"userName": 1})
         if mydoc != None:
@@ -81,6 +81,13 @@ class db:
         else:
             return ""
         return username
+
+    def query_avatarUrl(self,userid):
+        mycol = self.mydb["UserInfo"]
+        myquery =  {"userId": userid}
+        mydoc = mycol.find(myquery,{"avatarUrl":1})
+        avatarUrl = mydoc["avatarUrl"]
+        return avatarUrl
 
     def query_tagList(self):
         mycol = self.mydb["Tags"]
@@ -118,3 +125,4 @@ class db:
                       "avatarURL":avatarURL})
         id = mycol.find({"createTime": createTime})
         return id
+

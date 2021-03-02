@@ -130,11 +130,13 @@
     - method : POST
     - paramter :
         - createTime     
-        - title 
+        - title
+          subtitle
         - articleContent      
         - classify
         - tags : Array
         - cover : 
+        - pics :
     - 返回值
         - 成功：`{code:200 , msg:""}`
         - 失败：`{code:500 , msg:""}`
