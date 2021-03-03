@@ -107,8 +107,8 @@
               </v-col>
               <v-col v-for="(pic, index) in pics" :key="index" md="2">
                 <v-img
-                  :src="pic.src"
-                  :lazy-src="pic.src"
+                  :src="pic"
+                  :lazy-src="pic"
                   width="80"
                   height="80"
                 ></v-img>
@@ -345,7 +345,7 @@ export default {
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
-            this.pics.push({ src: JSON.parse(xhr.response).fileURL });
+            this.pics.push(JSON.parse(xhr.response).fileURL);
           }
           return "";
         }
@@ -358,8 +358,9 @@ export default {
       let formData = new FormData();
       formData.append("createTime", new Date().getTime());
       formData.append("content", this.$refs.content.internalValue);
-      formData.append("tags", this.$refs.tags.internalValue);
+      formData.append("tags", JSON.stringify(this.$refs.tags.internalValue));
       formData.append("classify", this.$refs.classify.internalValue);
+      console.log(this.pics);
       formData.append("pics", this.pics);
 
       this.axios

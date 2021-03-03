@@ -45,12 +45,7 @@
           </v-avatar>
         </div>
         <div>
-          <v-img
-            :src="cover.src"
-            :lazy-src="cover.src"
-            width="80"
-            height="80"
-          ></v-img>
+          <v-img :src="cover" :lazy-src="cover" width="80" height="80"></v-img>
         </div>
       </div>
       <div class="feature-set">
@@ -166,7 +161,7 @@ export default {
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
-            this.cover = { src: JSON.parse(xhr.response).fileURL };
+            this.cover = JSON.parse(xhr.response).fileURL;
           }
           return "";
         }
@@ -181,7 +176,7 @@ export default {
       formData.append("articleContent", this.articleContent);
       formData.append("title", this.$refs.title.internalValue);
       formData.append("subTitle", this.$refs.subTitle.internalValue);
-      formData.append("tags", this.$refs.tags.internalValue);
+      formData.append("tags", JSON.stringify(this.$refs.tags.internalValue));
       formData.append("classify", this.$refs.classify.internalValue);
       formData.append("cover", this.cover);
 
