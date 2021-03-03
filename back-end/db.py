@@ -18,7 +18,7 @@ class db:
         self.myDB = self.myClient["clay"]
 
     def login(self, userName):
-        return self.userDB.find_one({"userName": userName})
+        return self.userCL.find_one({"userName": userName})
 
     def register(self, user_id, user_name, user_email, user_password):
         mydict = {"userId": user_id, "userName": user_name, "email": user_email, "password": user_password,
@@ -37,28 +37,28 @@ class db:
         return self.cookieCL.find_one({"expireTime": expireTime})
 
     def article(self, aid):
-        mycol = self.mydb["Articles"]
+        mycol = self.myDB["Articles"]
         myquery = {"selfId": aid}
         mydoc = mycol.find(myquery)
         res = mydoc
         return res
 
     def tags(self, tid):
-        mycol = self.mydb["Tags"]
+        mycol = self.myDB["Tags"]
         myquery = {"selfId": tid}
         mydoc = mycol.find(myquery)
         res = mydoc
         return res
 
     def articleimg(self, iid):
-        mycol = self.mydb["Imgs"]
+        mycol = self.myDB["Imgs"]
         myquery = {"selfId": iid}
         mydoc = mycol.find(myquery)
         res = mydoc
         return res
 
     def publish_query_nskips(self, num):
-        mycol = self.mydb["Publish"]
+        mycol = self.myDB["Publish"]
         res = mycol.find().sort("createTime", -1).skip(num).limit(5)
         publishList = []
         for item in res:
@@ -66,31 +66,28 @@ class db:
         return publishList
 
     def query_username(self, userid):
-        mycol = self.mydb["UserInfo"]
-        myquery = {"userId": userid}
-        mydoc = mycol.find(myquery, {"userName": 1})
-        if mydoc != None:
-            username = mydoc["userName"]
-            return username
+        res = self.userCL.find_one({"userId": userid})
+        if res:
+            return True
         else:
-            return ""
-        return username
+            return False
 
     def query_avatarUrl(self, userid):
-        mycol = self.mydb["UserInfo"]
+        mycol = self.myDB["UserInfo"]
         myquery = {"userId": userid}
-        mydoc = mycol.find(myquery, {"avatarUrl": 1})
+        print(userid)
+        mydoc = mycol.find_one(myquery)  # , {"avatarUrl": 1})
         avatarUrl = mydoc["avatarUrl"]
         return avatarUrl
 
     def query_tagList(self):
-        mycol = self.mydb["Tags"]
+        mycol = self.myDB["Tags"]
         tagList = mycol.find().pretty()
         return tagList
 
     def thinking_insert(self, createTime, userId, ideaContent, classify, tags,
                         pics, authorName, avatarURL):
-        mycol = self.mydb["Ideas"]
+        mycol = self.myDB["Ideas"]
         mycol.insert({"createTime": createTime, "userId": userId, "ideaContent": ideaContent
                          , "classify": classify, "tags": tags, "pics": pics, "authorName": authorName,
                       "avatarURL": avatarURL})
@@ -98,13 +95,13 @@ class db:
         return id
 
     def publish_insert(self, parentId, createTime, type):
-        mycol = self.mydb["Publish"]
+        mycol = self.myDB["Publish"]
         mycol.insert({"parentId": parentId, "createTime": createTime, "type": type})
         id = mycol.find({"createTime": createTime})
         return id
 
     def video_insert(self, title, videoUrl, userId, authorName, avatarURL, createTime, classify, tags, cover):
-        mycol = self.mydb["Videos"]
+        mycol = self.myDB["Videos"]
         mycol.insert(
             {"createTime": createTime, "userId": userId, "authorName": authorName, "videoUrl": videoUrl, "title": title,
              "classify": classify, "tags": tags, "cover": cover})
@@ -113,7 +110,7 @@ class db:
 
     def article_insert(self, createTime, userId, title, subTitle, articleContent, classify, tags
                        , cover, pics):
-        _id = uuid4()
+        _id = str(uuid4())
         self.articleCL.insert({"_id": _id,
                                "userId": userId,
                                "Title": title,

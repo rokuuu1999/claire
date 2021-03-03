@@ -25,10 +25,8 @@ def login():
             outcome = {"code": 500, "msg": "未查询到cookies，请重新登录"}
             resp = make_response(outcome)
     else:
-        res = json.loads(request.get_data(as_text=True))
-
-        user_name = res['username']
-        user_password = res['password']
+        user_name = request.form.get("username")
+        user_password = request.form.get("password")
 
         data = database.login(user_name)
 
@@ -48,11 +46,10 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        res = json.loads(request.get_data(as_text=True))
-        user_name = res['userName']
-        user_email = res['email']
-        user_password = res['password']
-        user_repassword = res['repassword']
+        user_name = request.form.get('userName')
+        user_email = request.form.get('email')
+        user_password = request.form.get('password')
+        user_repassword = request.form.get('repassword')
 
         user_id = md5(user_name + PRIVATE_KEY)
 
@@ -119,6 +116,7 @@ def blue_book():
 
         createTime = request.form.get("createTime")
         pics = request.form.get("pics")
+        print(pics)
         title = request.form.get("title")
         subTitle = request.form.get("subTitle")
         articleContent = request.form.get("articleContent")
@@ -128,7 +126,7 @@ def blue_book():
 
         _id = database.article_insert(createTime, userId, title, subTitle,
                                       articleContent, classify, tags, cover,
-                                      pics, authorName, avatarURL)
+                                      pics)
         database.publish_insert(_id, createTime, 0)
         resp = {"code": 200, "msg": "插入文章成功"}
     else:
