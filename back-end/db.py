@@ -1,46 +1,40 @@
 import pymongo
+from uuid import uuid4
 from setting import *
 
 
 # Python 面向对象写法
 class db:
     def __init__(self):
+        self.myClient = self.myDB = None
         self.connect()
+        self.userCL = self.myDB["UserInfo"]
+        self.cookieCL = self.myDB["Cookies"]
+        self.articleCL = self.myDB["Articles"]
 
     def connect(self):
-        self.myclient = pymongo.MongoClient(
+        self.myClient = pymongo.MongoClient(
             "mongodb://{user}:{password}@{ip}:27017/{db}".format(user=USER, password=PASSWORD, ip=IP, db=AUTH_DB))
-        self.mydb = self.myclient["clay"]
+        self.myDB = self.myClient["clay"]
 
     def login(self, userName):
-        mycol = self.mydb["User"]
-        myquery = {"userName": userName}
-        mydoc = mycol.find_one(myquery)
-        res = mydoc
-        return res
+        return self.userDB.find_one({"userName": userName})
 
     def register(self, user_id, user_name, user_email, user_password):
-        mycol = self.mydb["User"]
         mydict = {"userId": user_id, "userName": user_name, "email": user_email, "password": user_password,
                   "avatarUrl": "https://pic2.zhimg.com/da8e974dc_xll.jpg", "userAuthority": 1, "like": [],
                   "comments": [],
                   "publish": []}
-        mycol.insert_one(mydict)
+        self.userCL.insert_one(mydict)
 
     def cookies(self, userid, time):
-        mycol = self.mydb["Cookies"]
-        newCookie = {"userId": userid, "expireTime": time}
-        mycol.update({"userId": userid}, newCookie, True)
+        self.cookieCL.update({"userId": userid}, {"userId": userid, "expireTime": time}, True)
 
     def cookies_query(self, userid):
-        mycol = self.mydb["Cookies"]
-        mydict = {"userId": userid}
-        return mycol.find_one(mydict)
+        return self.cookieCL.find_one({"userId": userid})
 
-    def cookies_query_expiretime(self, expiretime):
-        mycol = self.mydb["Cookies"]
-        mydict = {"expireTime": expiretime}
-        return mycol.find_one(mydict)
+    def cookies_query_expireTime(self, expireTime):
+        return self.cookieCL.find_one({"expireTime": expireTime})
 
     def article(self, aid):
         mycol = self.mydb["Articles"]
@@ -82,10 +76,10 @@ class db:
             return ""
         return username
 
-    def query_avatarUrl(self,userid):
+    def query_avatarUrl(self, userid):
         mycol = self.mydb["UserInfo"]
-        myquery =  {"userId": userid}
-        mydoc = mycol.find(myquery,{"avatarUrl":1})
+        myquery = {"userId": userid}
+        mydoc = mycol.find(myquery, {"avatarUrl": 1})
         avatarUrl = mydoc["avatarUrl"]
         return avatarUrl
 
@@ -95,11 +89,11 @@ class db:
         return tagList
 
     def thinking_insert(self, createTime, userId, ideaContent, classify, tags,
-                        pics,authorName,avatarURL):
+                        pics, authorName, avatarURL):
         mycol = self.mydb["Ideas"]
         mycol.insert({"createTime": createTime, "userId": userId, "ideaContent": ideaContent
-                         , "classify": classify, "tags": tags, "pics": pics ,"authorName":authorName,
-                      "avatarURL":avatarURL})
+                         , "classify": classify, "tags": tags, "pics": pics, "authorName": authorName,
+                      "avatarURL": avatarURL})
         id = mycol.find({"createTime": createTime})
         return id
 
@@ -109,20 +103,26 @@ class db:
         id = mycol.find({"createTime": createTime})
         return id
 
-    def video_insert(self,title,videoUrl,userId,authorName,avatarURL,createTime,classify,tags,cover):
+    def video_insert(self, title, videoUrl, userId, authorName, avatarURL, createTime, classify, tags, cover):
         mycol = self.mydb["Videos"]
-        mycol.insert({"createTime":createTime,"userId": userId,"authorName":authorName,"videoUrl":videoUrl,"title":title,
-                      "classify":classify,"tags":tags,"cover":cover})
-        id = mycol.find({"createTime":createTime})
-        return id
-
-    def article_insert(self, createTime, userId, title, subTitle, articleContent, classify, tags
-                       , cover,pics,authorName,avatarURL):
-        mycol = self.mydb["Articles"]
-        mycol.insert({"createTime": createTime, "userId": userId, "Title": title,
-                      "subTitle": subTitle, "articleContent": articleContent,
-                      "classify": classify, "tags": tags, "cover": cover,"pics":pics,"authorName":authorName,
-                      "avatarURL":avatarURL})
+        mycol.insert(
+            {"createTime": createTime, "userId": userId, "authorName": authorName, "videoUrl": videoUrl, "title": title,
+             "classify": classify, "tags": tags, "cover": cover})
         id = mycol.find({"createTime": createTime})
         return id
 
+    def article_insert(self, createTime, userId, title, subTitle, articleContent, classify, tags
+                       , cover, pics):
+        _id = uuid4()
+        self.articleCL.insert({"_id": _id,
+                               "userId": userId,
+                               "Title": title,
+                               "subTitle": subTitle,
+                               "createTime": createTime,
+                               "articleContent": articleContent,
+                               "classify": classify,
+                               "tags": tags,
+                               "cover": cover,
+                               "pics": pics,
+                               })
+        return _id

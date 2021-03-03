@@ -10,7 +10,7 @@ def md5(private_key):
     return userid
 
 
-class qiniu:
+class kodo:
     def __init__(self):
         self.kodo = Auth(AK, SK)
         self.bucket_name = 'siegelion'
@@ -21,3 +21,4 @@ class qiniu:
         localFile = './tmp/' + fileName
         ret, info = put_file(token, fileName, localFile)
         return ret["key"]
+
