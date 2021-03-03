@@ -119,7 +119,7 @@
         - ideaContent
         - classify
         - tags : Array
-        - imgs : Array
+        - pics : Array
     - 返回值
         - 成功：`{code:200 , msg:""}`
         - 失败：`{code:500 , msg:""}`
@@ -150,6 +150,7 @@
         - title 
         - classify
         - tags : Array
+        - videoUrl : string
 
 - 上传视频​/图片​
     - path :  /uploadFile

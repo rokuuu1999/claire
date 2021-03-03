@@ -11,6 +11,9 @@ class db:
         self.userCL = self.myDB["UserInfo"]
         self.cookieCL = self.myDB["Cookies"]
         self.articleCL = self.myDB["Articles"]
+        self.videosCL = self.myDB["Videos"]
+        self.publishCL = self.myDB["Publish"]
+        self.ideasCL = self.myDB["Ideas"]
 
     def connect(self):
         self.myClient = pymongo.MongoClient(
@@ -86,27 +89,42 @@ class db:
         return tagList
 
     def thinking_insert(self, createTime, userId, ideaContent, classify, tags,
-                        pics, authorName, avatarURL):
-        mycol = self.myDB["Ideas"]
-        mycol.insert({"createTime": createTime, "userId": userId, "ideaContent": ideaContent
-                         , "classify": classify, "tags": tags, "pics": pics, "authorName": authorName,
-                      "avatarURL": avatarURL})
-        id = mycol.find({"createTime": createTime})
-        return id
+                        pics, ):
+        _id = str(uuid4())
+        self.ideasCL.insert({
+            "createTime": createTime,
+            "userId": userId,
+            "ideaContent": ideaContent,
+            "classify": classify,
+            "tags": tags,
+            "pics": pics,
+        })
+        return _id
 
     def publish_insert(self, parentId, createTime, type):
-        mycol = self.myDB["Publish"]
-        mycol.insert({"parentId": parentId, "createTime": createTime, "type": type})
-        id = mycol.find({"createTime": createTime})
-        return id
 
-    def video_insert(self, title, videoUrl, userId, authorName, avatarURL, createTime, classify, tags, cover):
-        mycol = self.myDB["Videos"]
-        mycol.insert(
-            {"createTime": createTime, "userId": userId, "authorName": authorName, "videoUrl": videoUrl, "title": title,
-             "classify": classify, "tags": tags, "cover": cover})
-        id = mycol.find({"createTime": createTime})
-        return id
+        _id = str(uuid4())
+        self.publishCL.insert({
+            "parentId": parentId,
+            "createTime": createTime,
+            "type": type,
+        })
+        return _id
+
+    def video_insert(self, title, videoUrl, userId, createTime, classify, tags):
+        _id = str(uuid4())
+        self.videosCL.insert({
+            "title": title,
+            "videoUrl": videoUrl,
+            "userId": userId,
+
+            "createTime": createTime,
+            "classify": classify,
+            "tags": tags,
+
+
+        })
+        return _id
 
     def article_insert(self, createTime, userId, title, subTitle, articleContent, classify, tags
                        , cover, pics):

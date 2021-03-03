@@ -111,8 +111,6 @@ def homepage():
 def blue_book():
     if request.method == 'POST':
         userId = request.cookies.get('userId')
-        authorName = database.query_username(userId)
-        avatarURL = database.query_avatarUrl(userId)
 
         createTime = request.form.get("createTime")
         pics = request.form.get("pics")
@@ -138,46 +136,40 @@ def blue_book():
 @app.route('/publishIdea', methods=['POST'])
 def thinking():
     if request.method == 'POST':
-        res = request.cookies.get('expireTime')
-        userId = str(database.cookies_query_expiretime(res))
+        userId = request.cookies.get('userId')
+
         createTime = request.form.get("createTime")
-        authorName = request.form.get("authorName")
-        avatarURL = request.form.get("avatarURL")
+
         pics = request.form.get("pics")
         ideaContent = request.form.get("ideaContent")
         classify = request.form.get("classify")
         tags = request.form.get("tags")
-        document = database.thinking_insert(createTime, userId,
-                                            ideaContent, classify, tags,
-                                            authorName, avatarURL, pics)
-        id = document[0]
-        database.publish_insert(id, createTime, 1)
-        result = {"code": 200, "msg": "插入想法成功"}
-        return make_response(result)
+        _id = database.thinking_insert(createTime, userId,
+                                       ideaContent, classify, tags, pics)
+
+        database.publish_insert(_id, createTime, 1)
+        resp = make_response({"code": 200, "msg": "插入想法成功"})
+
     else:
         outcome = {"code": 500, "msg": "想法插入失败"}
         resp = make_response(outcome)
-        return resp
+    return resp
 
 
 @app.route('/publishVideo', methods=['POST'])
 def movie_camera():
     if request.method == 'POST':
-        res = request.cookies.get('expireTime')
-        userId = str(database.cookies_query_expiretime(res))
+        userId = request.cookies.get('userId')
         createTime = request.form.get("createTime")
-        authorName = database.query_username(userId)
         videoUrl = request.form.get("videoUrl")
         title = request.form.get("title")
         classify = request.form.get("classify")
         tags = request.form.get("tags")
-        avatarURL = database.query_avatarUrl(userId)
-        cover = request.form.get("cover")
-        document = database.video_insert(createTime, userId, title,
-                                         classify, tags, cover,
-                                         authorName, videoUrl, avatarURL)
-        id = document[0]
-        database.publish_insert(id, createTime, 2)
+        print(tags)
+        _id = database.video_insert(createTime, userId, title,
+                                    classify, tags, videoUrl)
+
+        database.publish_insert(_id, createTime, 2)
         result = {"code": 200, "msg": "插入video成功"}
         resp = make_response(result)
     else:
