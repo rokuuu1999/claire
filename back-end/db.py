@@ -88,8 +88,8 @@ class db:
         tagList = mycol.find().pretty()
         return tagList
 
-    def thinking_insert(self, createTime, userId, ideaContent, classify, tags,
-                        pics, ):
+    def thinking_insert(self, createTime, userId,
+                                       ideaContent, classify, tags, pics ):
         _id = str(uuid4())
         self.ideasCL.insert({
             "createTime": createTime,
@@ -111,7 +111,8 @@ class db:
         })
         return _id
 
-    def video_insert(self, title, videoUrl, userId, createTime, classify, tags):
+    def video_insert(self,createTime, userId, title,
+                                    classify, tags, videoUrl):
         _id = str(uuid4())
         self.videosCL.insert({
             "title": title,
@@ -126,8 +127,9 @@ class db:
         })
         return _id
 
-    def article_insert(self, createTime, userId, title, subTitle, articleContent, classify, tags
-                       , cover, pics):
+    def article_insert(self,createTime, userId, title, subTitle,
+                                      articleContent, classify, tags, cover,
+                                      pics):
         _id = str(uuid4())
         self.articleCL.insert({"_id": _id,
                                "userId": userId,
