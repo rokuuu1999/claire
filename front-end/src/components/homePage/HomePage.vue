@@ -280,7 +280,8 @@ export default {
             "http://kodo.wendau.com/icon1.png",
             "http://kodo.wendau.com/icon1.png"
           ],
-          cover: "http://kodo.wendau.com/%E7%9B%B8%E4%BF%A1%E6%9C%AA%E6%9D%A5.jpg"
+          cover:
+            "http://kodo.wendau.com/%E7%9B%B8%E4%BF%A1%E6%9C%AA%E6%9D%A5.jpg"
         }
       ],
       tags: [
@@ -354,19 +355,15 @@ export default {
       xhr.send(formData);
     },
     publish: function() {
-      let createTime = new Date().getTime();
-      let content = this.$refs.content.internalValue;
-      let tags = this.$refs.tags.internalValue;
-      let classify = this.$refs.classify.internalValue;
-      console.log(content, tags, classify);
+      let formData = new FormData();
+      formData.append("createTime", new Date().getTime());
+      formData.append("content", this.$refs.content.internalValue);
+      formData.append("tags", this.$refs.tags.internalValue);
+      formData.append("classify", this.$refs.classify.internalValue);
+      formData.append("pics", this.pics);
+
       this.axios
-        .post("/publishIdea", {
-          createTime: createTime,
-          ideaContent: content,
-          tags: tags,
-          classify: classify,
-          imgs: this.pics
-        })
+        .post("/publishIdea", formData)
         .then()
         .catch();
     },

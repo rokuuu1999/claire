@@ -155,7 +155,8 @@ export default {
          * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
          * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 ``
          */
-        this.$refs.md.$img2Url(pos, res.data);
+        console.log(res.data);
+        this.$refs.md.$img2Url(pos, res.data.fileURL);
       });
     },
     uploadPic: function() {
@@ -175,23 +176,17 @@ export default {
       xhr.send(formData);
     },
     publish: function() {
-      let createTime = new Date().getTime();
-      let articleContent = this.articleContent;
-      let title = this.$refs.title.internalValue;
-      let subTitle = this.$refs.subTitle.internalValue;
-      let tags = this.$refs.tags.internalValue;
-      let classify = this.$refs.classify.internalValue;
+      let formData = new FormData();
+      formData.append("createTime", new Date().getTime());
+      formData.append("articleContent", this.articleContent);
+      formData.append("title", this.$refs.title.internalValue);
+      formData.append("subTitle", this.$refs.subTitle.internalValue);
+      formData.append("tags", this.$refs.tags.internalValue);
+      formData.append("classify", this.$refs.classify.internalValue);
+      formData.append("cover", this.cover);
 
       this.axios
-        .post("/publishArticle", {
-          title: title,
-          subTitle: subTitle,
-          createTime: createTime,
-          articleContent: articleContent,
-          tags: tags,
-          classify: classify,
-          cover: this.cover
-        })
+        .post("/publishArticle", formData)
         .then()
         .catch();
     }

@@ -93,7 +93,7 @@ export default {
   name: "VideoPublishPage",
   data() {
     return {
-      pics: [],
+      videoURL: "",
       publishIdea: {
         classify: ["琐碎吐槽", "感悟思考", "学习点滴", "仅是记录", "我不知道"],
         tags: []
@@ -108,7 +108,7 @@ export default {
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
-            console.log(xhr.response);
+            this.videoURL = { src: JSON.parse(xhr.response).fileURL };
           }
         }
       };
@@ -116,6 +116,18 @@ export default {
       formData.append("file", file);
       formData.append("type", String(file.name).split(".")[1]);
       xhr.send(formData);
+    },
+    publish: function() {
+      let formData = new FormData();
+      formData.append("createTime", new Date().getTime());
+      formData.append("tags", this.$refs.tags.internalValue);
+      formData.append("classify", this.$refs.classify.internalValue);
+      formData.append("videoUrl ", this.videoURL);
+
+      this.axios
+        .post("/publishIdea", formData)
+        .then()
+        .catch();
     }
   }
 };
