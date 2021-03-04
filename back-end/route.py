@@ -88,18 +88,18 @@ def tags():
 @app.route('/homepage', methods=['GET'])
 def homepage():
     if request.method == 'GET':
-        page = request.args.get("page")
-        publishList = database.publish_query_nskips(page * 5)
-        for publish in publishList:
-            if publish.type == 0:
-                database.article(publish._id)
-        result = {"code": 200, "msg": "请求成功", "publishList": publishList}
-        resp = make_response(result)
-        return resp
-    else:
-        outcome = {"code": 500, "msg": "请求失败"}
-        resp = make_response(outcome)
-        return resp
+        page = int(request.args.get("page"))
+        res = database.publish_query_nskips(page * 5)
+        publishList = []
+        for publish in res:
+            if publish["type"] == 0:
+                database.article(publish["parentId"])
+            elif publish["type"] == 1:
+                database.idea(publish["parentId"])
+            elif publish["type"] == 2:
+                database.video(publish["parentId"])
+        res = {"code": 200, "msg": "请求成功", "publishList": publishList}
+        return make_response(res)
 
 
 @app.route('/publishArticle', methods=['POST'])

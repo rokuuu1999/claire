@@ -3,10 +3,9 @@ from uuid import uuid4
 from setting import *
 
 
-# Python 面向对象写法
 class db:
     def __init__(self):
-        self.myClient = self.myDB = None
+        self.myClient = self.myDB = {}
         self.connect()
         self.userCL = self.myDB["UserInfo"]
         self.cookieCL = self.myDB["Cookies"]
@@ -31,46 +30,7 @@ class db:
                   "publish": []}
         self.userCL.insert_one(mydict)
 
-    def cookies(self, userid, time):
-        self.cookieCL.update({"userId": userid}, {"userId": userid, "expireTime": time}, True)
-
-    def cookies_query(self, userid):
-        return self.cookieCL.find_one({"userId": userid})
-
-    def article(self, aid):
-        mycol = self.myDB["Articles"]
-        myquery = {"selfId": aid}
-        mydoc = mycol.find(myquery)
-        res = mydoc
-        return res
-
-    def insert_tag(self, tags):
-        for tag in tags:
-            self.tagCl.update({"tagName": tag}, {
-                "$inc": {"num": 1},
-            }, upsert=True)
-
-    def hot_tags(self):
-        return self.tagCl.find().sort("num", -1).limit(10)
-
-    def hot_articles(self):
-        pass
-
-    def articleimg(self, iid):
-        mycol = self.myDB["Imgs"]
-        myquery = {"selfId": iid}
-        mydoc = mycol.find(myquery)
-        res = mydoc
-        return res
-
-    def publish_query_nskips(self, num):
-        mycol = self.myDB["Publish"]
-        res = mycol.find().sort("createTime", -1).skip(num).limit(5)
-        publishList = []
-        for item in res:
-            publishList.append(item)
-        return publishList
-
+    # UserInfo
     def query_username(self, userid):
         res = self.userCL.find_one({"userId": userid})
         if res:
@@ -79,55 +39,22 @@ class db:
             return False
 
     def query_avatarUrl(self, userid):
-        mycol = self.myDB["UserInfo"]
-        myquery = {"userId": userid}
-        print(userid)
-        mydoc = mycol.find_one(myquery)  # , {"avatarUrl": 1})
-        avatarUrl = mydoc["avatarUrl"]
-        return avatarUrl
+        return self.userCL.find_one({"userId": userid})["avatarUrl"]
 
-    def query_tagList(self):
-        mycol = self.myDB["Tags"]
-        tagList = mycol.find().pretty()
-        return tagList
+    # Cookie
+    def cookies(self, userid, time):
+        self.cookieCL.update({"userId": userid}, {"userId": userid, "expireTime": time}, True)
 
-    def thinking_insert(self, createTime, userId,
-                        ideaContent, classify, tags, pics):
-        _id = str(uuid4())
-        self.ideasCL.insert({
-            "createTime": createTime,
-            "userId": userId,
-            "ideaContent": ideaContent,
-            "classify": classify,
-            "tags": tags,
-            "pics": pics,
-        })
-        return _id
+    def cookies_query(self, userid):
+        return self.cookieCL.find_one({"userId": userid})
 
-    def publish_insert(self, parentId, createTime, type):
+    # Article
 
-        _id = str(uuid4())
-        self.publishCL.insert({
-            "parentId": parentId,
-            "createTime": createTime,
-            "type": type,
-        })
-        return _id
+    def article(self, aid):
+        return self.articleCL.find({"_id": aid})
 
-    def video_insert(self, createTime, userId, title,
-                     classify, tags, videoUrl):
-        _id = str(uuid4())
-        self.videosCL.insert({
-            "title": title,
-            "videoUrl": videoUrl,
-            "userId": userId,
-
-            "createTime": createTime,
-            "classify": classify,
-            "tags": tags,
-
-        })
-        return _id
+    def hot_articles(self):
+        pass
 
     def article_insert(self, createTime, userId, title, subTitle,
                        articleContent, classify, tags, cover,
@@ -145,3 +72,59 @@ class db:
                                "pics": pics,
                                })
         return _id
+
+    # Tag
+    def insert_tag(self, tags):
+        for tag in tags:
+            self.tagCl.update({"tagName": tag}, {
+                "$inc": {"num": 1},
+            }, upsert=True)
+
+    def hot_tags(self):
+        return self.tagCl.find().sort("num", -1).limit(10)
+
+    # Idea
+    def thinking_insert(self, createTime, userId,
+                        ideaContent, classify, tags, pics):
+        _id = str(uuid4())
+        self.ideasCL.insert({
+            "createTime": createTime,
+            "userId": userId,
+            "ideaContent": ideaContent,
+            "classify": classify,
+            "tags": tags,
+            "pics": pics,
+        })
+        return _id
+
+    # Video
+    def video_insert(self, createTime, userId, title,
+                     classify, tags, videoUrl):
+        _id = str(uuid4())
+        self.videosCL.insert({
+            "title": title,
+            "videoUrl": videoUrl,
+            "userId": userId,
+
+            "createTime": createTime,
+            "classify": classify,
+            "tags": tags,
+
+        })
+        return _id
+
+    # Publish
+    def publish_insert(self, parentId, createTime, type):
+        self.publishCL.insert({
+            "parentId": parentId,
+            "createTime": createTime,
+            "type": type,
+        })
+
+    def publish_query_nskips(self, num):
+        mycol = self.myDB["Publish"]
+        res = mycol.find().sort("createTime", -1).skip(num).limit(5)
+        publishList = []
+        for item in res:
+            publishList.append(item)
+        return publishList
