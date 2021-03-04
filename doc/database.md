@@ -125,7 +125,8 @@
 ```json
 {
     "selfId": "da1346d95e226faefc25a1c32cae4452",
-    "tagName": "标签"
+    "tagName": "标签",
+    "num" : 0
 }
 ```
 

@@ -14,6 +14,7 @@ class db:
         self.videosCL = self.myDB["Videos"]
         self.publishCL = self.myDB["Publish"]
         self.ideasCL = self.myDB["Ideas"]
+        self.tagCl = self.myDB["tag"]
 
     def connect(self):
         self.myClient = pymongo.MongoClient(
@@ -36,9 +37,6 @@ class db:
     def cookies_query(self, userid):
         return self.cookieCL.find_one({"userId": userid})
 
-    def cookies_query_expireTime(self, expireTime):
-        return self.cookieCL.find_one({"expireTime": expireTime})
-
     def article(self, aid):
         mycol = self.myDB["Articles"]
         myquery = {"selfId": aid}
@@ -46,12 +44,17 @@ class db:
         res = mydoc
         return res
 
-    def tags(self, tid):
-        mycol = self.myDB["Tags"]
-        myquery = {"selfId": tid}
-        mydoc = mycol.find(myquery)
-        res = mydoc
-        return res
+    def insert_tag(self, tags):
+        for tag in tags:
+            self.tagCl.update({"tagName": tag}, {
+                "$inc": {"num": 1},
+            }, upsert=True)
+
+    def hot_tags(self):
+        return self.tagCl.find().sort("num", -1).limit(10)
+
+    def hot_articles(self):
+        pass
 
     def articleimg(self, iid):
         mycol = self.myDB["Imgs"]
@@ -89,7 +92,7 @@ class db:
         return tagList
 
     def thinking_insert(self, createTime, userId,
-                                       ideaContent, classify, tags, pics ):
+                        ideaContent, classify, tags, pics):
         _id = str(uuid4())
         self.ideasCL.insert({
             "createTime": createTime,
@@ -111,8 +114,8 @@ class db:
         })
         return _id
 
-    def video_insert(self,createTime, userId, title,
-                                    classify, tags, videoUrl):
+    def video_insert(self, createTime, userId, title,
+                     classify, tags, videoUrl):
         _id = str(uuid4())
         self.videosCL.insert({
             "title": title,
@@ -123,13 +126,12 @@ class db:
             "classify": classify,
             "tags": tags,
 
-
         })
         return _id
 
-    def article_insert(self,createTime, userId, title, subTitle,
-                                      articleContent, classify, tags, cover,
-                                      pics):
+    def article_insert(self, createTime, userId, title, subTitle,
+                       articleContent, classify, tags, cover,
+                       pics):
         _id = str(uuid4())
         self.articleCL.insert({"_id": _id,
                                "userId": userId,

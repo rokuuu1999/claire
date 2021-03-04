@@ -11,10 +11,11 @@
         - 失败：`{code:500 , msg:""}`
     
 > method : GET
-    
+
 - 返回值
            - 成功：`{code:200 , msg:""}`
-        - 失败：`{code:500 , msg:""}`
+       
+     - 失败：`{code:500 , msg:""}`
     
 - register
     - path : /register
@@ -150,7 +151,7 @@
         - title 
         - classify
         - tags : Array
-        - videoUrl : string
+        -  videoUrl  :
 
 - 上传视频​/图片​
     - path :  /uploadFile

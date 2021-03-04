@@ -79,14 +79,10 @@ def articles():
 @app.route('/tags', methods=['GET'])
 def tags():
     if request.method == 'GET':
-        res = json.loads(request.get_data(as_text=True))
-        tid = res['tid']
-        result = database.tags(tid)
-
-        # 有问题
-        outcome = {"tid": result[0], "tagname": result[1]}
-
-        return make_response({"code": 200, "msg": "请求成功", "contain": outcome})
+        tagList = []
+        for tag in database.hot_tags():
+            tagList.append(tag["tagName"])
+        return make_response({"code": 200, "msg": "请求成功", "tagList": tagList})
 
 
 @app.route('/homepage', methods=['GET'])
@@ -140,11 +136,12 @@ def thinking():
         pics = request.form.get("pics")
         ideaContent = request.form.get("ideaContent")
         classify = request.form.get("classify")
-        tags = request.form.get("tags")
+        tags = json.loads(request.form.get("tags"))
         _id = database.thinking_insert(createTime, userId,
                                        ideaContent, classify, tags, pics)
 
         database.publish_insert(_id, createTime, 1)
+        database.insert_tag(tags)
         resp = make_response({"code": 200, "msg": "插入想法成功"})
 
     else:
