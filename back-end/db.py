@@ -31,15 +31,16 @@ class db:
         self.userCL.insert_one(mydict)
 
     # UserInfo
-    def query_username(self, userid):
-        res = self.userCL.find_one({"userId": userid})
+    def query_username(self, userId):
+        res = self.userCL.find_one({"userId": userId})["userName"]
         if res:
-            return True
+            return res
         else:
             return False
 
-    def query_avatarUrl(self, userid):
-        return self.userCL.find_one({"userId": userid})["avatarUrl"]
+    def query_avatarUrl(self, userId):
+        return self.userCL.find_one({"userId": userId})["avatarUrl"]
+
 
     # Cookie
     def cookies(self, userid, time):
@@ -51,14 +52,14 @@ class db:
     # Article
 
     def article(self, aid):
-        return self.articleCL.find({"_id": aid})
+        return self.articleCL.find_one({"_id": aid})
 
     def hot_articles(self):
         pass
 
     def article_insert(self, createTime, userId, title, subTitle,
                        articleContent, classify, tags, cover,
-                       pics):
+                       ):
         _id = str(uuid4())
         self.articleCL.insert({"_id": _id,
                                "userId": userId,
@@ -69,7 +70,7 @@ class db:
                                "classify": classify,
                                "tags": tags,
                                "cover": cover,
-                               "pics": pics,
+
                                })
         return _id
 
@@ -84,10 +85,14 @@ class db:
         return self.tagCl.find().sort("num", -1).limit(10)
 
     # Idea
+    def idea(self,iid):
+        return self.ideasCL.find_one({"_id":iid})
+
     def thinking_insert(self, createTime, userId,
                         ideaContent, classify, tags, pics):
         _id = str(uuid4())
         self.ideasCL.insert({
+            "_id": _id,
             "createTime": createTime,
             "userId": userId,
             "ideaContent": ideaContent,
@@ -98,10 +103,14 @@ class db:
         return _id
 
     # Video
+    def video(self,vid):
+        return self.videosCL.find_one({"_id":vid})
+
     def video_insert(self, createTime, userId, title,
                      classify, tags, videoUrl):
         _id = str(uuid4())
         self.videosCL.insert({
+            "_id": _id,
             "title": title,
             "videoUrl": videoUrl,
             "userId": userId,

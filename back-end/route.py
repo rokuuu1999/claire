@@ -35,6 +35,7 @@ def login():
             database.cookies(data["userId"], timeout)
 
             outcome = {"userId": data["userId"], "authroity": data["userAuthority"], "avatarUrl": data["avatarUrl"]}
+
             resp = make_response(outcome)
             resp.set_cookie('userId', data["userId"], expires=timeout)
         else:
@@ -66,11 +67,9 @@ def register():
 def articles():
     aid = request.args.get('aid')
     article = database.article(aid)
-
+    del article['userId']
     # 有问题
-    outcome = {"aid": article[0], "articleTile": article[1], "subTitle": article[2],
-               "articleContent": article[3], "userId": article[4], "createTime": article[5],
-               "commentNum": article[6], "likeNum": article[7], "classify": article[8]}
+    outcome = article
     result = {"code": 200, "msg": "请求成功", "contain": outcome}
     resp = make_response(result)
     return resp
@@ -90,15 +89,37 @@ def homepage():
     if request.method == 'GET':
         page = int(request.args.get("page"))
         res = database.publish_query_nskips(page * 5)
-        publishList = []
+
         for publish in res:
+
             if publish["type"] == 0:
-                database.article(publish["parentId"])
+                result = database.article(publish["parentId"])
+
+                result["userName"] = database.query_username(result['userId'])
+                result["avatarUrl"] = database.query_avatarUrl(result['userId'])
+                del result['_id']
+                del result['userId']
+
+                outcome = result
+
             elif publish["type"] == 1:
-                database.idea(publish["parentId"])
+                result = database.idea(publish["parentId"])
+
+                result["userName"] = database.query_username(result['userId'])
+                result["avatarUrl"] = database.query_avatarUrl(result['userId'])
+                del result['_id']
+                del result['userId']
+                outcome = result
+
             elif publish["type"] == 2:
-                database.video(publish["parentId"])
-        res = {"code": 200, "msg": "请求成功", "publishList": publishList}
+                result = database.video(publish["parentId"])
+                result["userName"] = database.query_username(result['userId'])
+                result["avatarUrl"] = database.query_avatarUrl(result['userId'])
+                del result['_id']
+                del result['userId']
+                outcome = result
+
+        res = {"code": 200, "msg": "请求成功", "homePageList": outcome}
         return make_response(res)
 
 
@@ -134,7 +155,8 @@ def thinking():
         createTime = request.form.get("createTime")
 
         pics = request.form.get("pics")
-        ideaContent = request.form.get("ideaContent")
+        ideaContent = request.form.get("content")
+
         classify = request.form.get("classify")
         tags = json.loads(request.form.get("tags"))
         _id = database.thinking_insert(createTime, userId,
@@ -177,6 +199,7 @@ def upload():
         myKodo = kodo()
         file = request.files.get("file")
         fileType = request.form.get("type")
+
         fileName = "{name}.{type}".format(name=str(uuid.uuid4()), type=fileType)
         filePath = "./tmp/" + fileName
         file.save(filePath)
@@ -186,3 +209,7 @@ def upload():
     else:
         resp = make_response({"code": 500, "msg": "上传文件失败"})
     return resp
+
+# def comment():
+#    if request.method == 'GET':
+#        userId = request.
