@@ -22,7 +22,11 @@ class db:
         self.myDB = self.myClient["clay"]
 
     def login(self, userName):
-        return self.userCL.find_one({"userName": userName})
+        res = self.userCL.find_one({"userName": userName})
+        if res:
+            return res
+        else:
+            return False
 
     def register(self, user_id, user_name, user_email, user_password):
         mydict = {"userId": user_id, "userName": user_name, "email": user_email, "password": user_password,
@@ -40,20 +44,34 @@ class db:
             return False
 
     def query_avatarUrl(self, userId):
-        return self.userCL.find_one({"userId": userId})["avatarUrl"]
-
+        res = self.userCL.find_one({"userId": userId})["avatarUrl"]
+        if res:
+            return res
+        else:
+            return False
 
     # Cookie
     def cookies(self, userid, time):
-        self.cookieCL.update({"userId": userid}, {"userId": userid, "expireTime": time}, True)
-
+        res = self.cookieCL.update({"userId": userid}, {"userId": userid, "expireTime": time}, True)
+        if res:
+            return True
+        else:
+            return False
     def cookies_query(self, userid):
-        return self.cookieCL.find_one({"userId": userid})
+        res = self.cookieCL.find_one({"userId": userid})
+        if res:
+            return True
+        else:
+            return False
 
     # Article
 
     def article(self, aid):
-        return self.articleCL.find_one({"_id": aid})
+        res = self.articleCL.find_one({"_id": aid})
+        if res:
+            return res
+        else:
+            return False
 
     def hot_articles(self):
         pass
@@ -83,12 +101,19 @@ class db:
             }, upsert=True)
 
     def hot_tags(self):
-        return self.tagCl.find().sort("num", -1).limit(10)
+        res = self.tagCl.find().sort("num", -1).limit(10)
+        if res:
+            return res
+        else:
+            return False
 
     # Idea
     def idea(self,iid):
-        return self.ideasCL.find_one({"_id":iid})
-
+        res = self.ideasCL.find_one({"_id":iid})
+        if res:
+            return res
+        else:
+            return False
     def thinking_insert(self, createTime, userId,
                         ideaContent, classify, tags, pics):
         _id = str(uuid4())
@@ -105,7 +130,11 @@ class db:
 
     # Video
     def video(self,vid):
-        return self.videosCL.find_one({"_id":vid})
+        res = self.videosCL.find_one({"_id":vid})
+        if res:
+            return res
+        else:
+            return False
 
     def video_insert(self, createTime, userId, title,
                      classify, tags, videoUrl):
@@ -141,5 +170,8 @@ class db:
 
     # Comment
     def comment(self,id):
-        return self.commentCL.find_one({"_id":id})
-
+        res = self.commentCL.find_one({"_id":id})
+        if res:
+            return res
+        else:
+            return False
