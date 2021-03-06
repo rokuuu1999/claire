@@ -1,31 +1,37 @@
 <template>
   <div class="full-size pages-container">
-    <template v-for="(item, index) in publishList">
-      <publish-card
-        :title="item.title"
-        :authorName="item.authorName"
-        :avatarUrl="item.avatarUrl"
-        :tags="item.tags"
-        :classify="item.classify"
-        :class="['page-card', 'card-' + (index + 1)]"
-        :key="index"
-      >
-        <template slot="body">
-          <idea-card
-            :content="item.content"
-            :pics="item.pics"
-            v-if="item.type == 1"
-          ></idea-card>
-          <video-card v-if="item.type === 2"></video-card>
-          <article-card
-            :sub-title="item.subTitle"
-            :pics="item.pics"
-            :cover="item.cover"
-            v-if="item.type === 0"
-          ></article-card>
-        </template>
-      </publish-card>
-    </template>
+    <div class="content-container">
+      <template v-for="(item, index) in publishList">
+        <publish-card
+          :title="item.title"
+          :authorName="item.authorName"
+          :avatarUrl="item.avatarUrl"
+          :tags="item.tags"
+          :classify="item.classify"
+          :class="['page-card', 'card-' + (index + 1)]"
+          :key="index"
+        >
+          <template slot="body">
+            <idea-card
+              :content="item.content"
+              :pics="item.pics"
+              v-if="item.type == 1"
+            ></idea-card>
+            <video-card
+              :cover="item.videoUrl"
+              v-if="item.type === 2"
+            ></video-card>
+            <article-card
+              :sub-title="item.subTitle"
+              :pics="item.pics"
+              :cover="item.cover"
+              v-if="item.type === 0"
+            ></article-card>
+          </template>
+        </publish-card>
+      </template>
+      <Pagination class="pagination"></Pagination>
+    </div>
     <div class="side-container">
       <v-card class="publish-container">
         <div
@@ -81,7 +87,6 @@
         </v-card-text>
       </v-card>
     </div>
-    <Pagination class="pagination"></Pagination>
     <v-dialog v-model="overlay" width="50%">
       <v-card>
         <v-card-title>发想法</v-card-title>
@@ -412,42 +417,34 @@ export default {
 @import "~@/assets/css/common.less";
 
 .pages-container {
-  display: grid;
-  grid-template-columns: 10% 45% 25% 5%;
-  grid-template-rows: 1fr repeat(5, 5fr) 2fr;
-  grid-row-gap: 2%;
-  grid-column-gap: 5%;
+  display: flex;
+  justify-content: space-around;
 
-  .page-card {
+  .content-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 60vw;
-    height: 60vh;
-  }
-
-  .loop(@counter) when (@counter<=7) {
-    .card-@{counter} {
-      grid-row-start: @counter+1;
-      grid-row-end: @counter+2;
-      grid-column-start: 2;
-      grid-column-end: 3;
+    margin-top: 30px;
+    .page-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 50vw;
+      height: 50vh;
+      margin: 30px 0 30px 0;
     }
-    .loop((@counter+1));
   }
-  .loop(1);
 
   .side-container {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 10% 15% 30%;
     grid-row-gap: 3%;
 
-    grid-column-start: 3;
-    grid-column-end: 4;
-    grid-row-start: 2;
-    grid-row-end: 5;
+    width: 25%;
+    height: 200vh;
+    margin-top: 60px;
     justify-items: center;
 
     .publish-container:extend(.flex-layout) {
@@ -475,10 +472,6 @@ export default {
   }
 
   .pagination {
-    grid-row-start: 5;
-    grid-row-end: 6;
-    grid-column-start: 2;
-    grid-column-end: 3;
     align-items: center;
   }
 }
