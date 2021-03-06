@@ -14,6 +14,7 @@ class db:
         self.publishCL = self.myDB["Publish"]
         self.ideasCL = self.myDB["Ideas"]
         self.tagCl = self.myDB["tag"]
+        self.commentCL = self.myDB["Comments"]
 
     def connect(self):
         self.myClient = pymongo.MongoClient(
@@ -137,3 +138,8 @@ class db:
         for item in res:
             publishList.append(item)
         return publishList
+
+    # Comment
+    def comment(self,id):
+        return self.commentCL.find_one({"_id":id})
+

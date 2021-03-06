@@ -100,7 +100,7 @@ def homepage():
                 result = database.idea(publish["parentId"])
             elif publish["type"] == 2:
                 result = database.video(publish["parentId"])
-
+            result["type"] = publish["type"]
             result["authorName"] = database.query_username(result['userId'])
             result["avatarUrl"] = database.query_avatarUrl(result['userId'])
 
@@ -110,7 +110,6 @@ def homepage():
 
         res = {"code": 200, "msg": "请求成功", "publishList": homePageList}
         return make_response(res)
-
 
 @app.route('/publishArticle', methods=['POST'])
 def blue_book():
@@ -199,6 +198,31 @@ def upload():
         resp = make_response({"code": 500, "msg": "上传文件失败"})
     return resp
 
-# def comment():
-#    if request.method == 'GET':
-#        userId = request.
+@app.route('/comment',methods=['GET'])
+def comment():
+    if request.method == 'GET':
+        pageId = request.args.get('parentId')
+
+        comment = database.comment(pageId)
+        pageList = {}
+        type = request.args.get('type')
+
+        if type == '0':
+            article = database.article(pageId)
+            pageList = (article)
+        elif type == '1':
+            idea = database.idea(pageId)
+
+            pageList = (idea)
+
+        elif type == '2':
+            video = database.video(pageId)
+            pageList = (video)
+        pageList['comment'] = []
+        pageList['likeNum'] = 0
+        pageList['commentNum'] = 0
+        pageList["authorName"] = database.query_username(pageList["userId"])
+        pageList["avatarUrl"] = database.query_avatarUrl(pageList["userId"])
+        del pageList['userId']
+        resp = make_response({"code": 200, "msg": "查询成功", "page": pageList})
+        return resp
