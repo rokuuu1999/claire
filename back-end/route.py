@@ -89,38 +89,24 @@ def homepage():
     if request.method == 'GET':
         page = int(request.args.get("page"))
         res = database.publish_query_nskips(page * 5)
-        homePageList = {}
-        if res == "null":
-            res = {"code":500,"msg":"没有数据可以返回"}
+        homePageList = []
+        if not res:
+            res = {"code": 500, "msg": "没有数据可以返回"}
             return make_response(res)
         for publish in res:
-
             if publish["type"] == 0:
                 result = database.article(publish["parentId"])
-
-                result["userName"] = database.query_username(result['userId'])
-                result["avatarUrl"] = database.query_avatarUrl(result['userId'])
-                del result['_id']
-                del result['userId']
-
-                result.append(homePageList)
-
             elif publish["type"] == 1:
                 result = database.idea(publish["parentId"])
-
-                result["userName"] = database.query_username(result['userId'])
-                result["avatarUrl"] = database.query_avatarUrl(result['userId'])
-                del result['_id']
-                del result['userId']
-                result.append(homePageList)
-
             elif publish["type"] == 2:
                 result = database.video(publish["parentId"])
-                result["userName"] = database.query_username(result['userId'])
-                result["avatarUrl"] = database.query_avatarUrl(result['userId'])
-                del result['_id']
-                del result['userId']
-                result.append(homePageList)
+
+            result["authorName"] = database.query_username(result['userId'])
+            result["avatarUrl"] = database.query_avatarUrl(result['userId'])
+
+            result['publishId'] = result.pop("_id")
+            del result['userId']
+            homePageList.append(result)
 
         res = {"code": 200, "msg": "请求成功", "publishList": homePageList}
         return make_response(res)

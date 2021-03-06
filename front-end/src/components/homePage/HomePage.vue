@@ -14,14 +14,14 @@
           <idea-card
             :content="item.content"
             :pics="item.pics"
-            v-if="item.type === 0"
+            v-if="item.type == 1"
           ></idea-card>
-          <video-card v-if="item.type === 1"></video-card>
+          <video-card v-if="item.type === 2"></video-card>
           <article-card
             :sub-title="item.subTitle"
             :pics="item.pics"
             :cover="item.cover"
-            v-if="item.type === 2"
+            v-if="item.type === 0"
           ></article-card>
         </template>
       </publish-card>
@@ -206,6 +206,7 @@ export default {
     return {
       overlay: false,
       pageNum: 0,
+      newContentFlag: true,
       pics: [],
       publishButton: [
         {
@@ -231,7 +232,8 @@ export default {
           }
         }
       ],
-      publishList: [
+      publishList: [],
+      publishListTemp: [
         {
           type: 0,
           title: "测试",
@@ -329,6 +331,7 @@ export default {
       }.bind(this);
       let formData = new FormData();
       formData.append("file", pic);
+      formData.append("type", String(pic.name).split(".")[1]);
       xhr.send(formData);
     },
     publish: function() {
@@ -337,8 +340,7 @@ export default {
       formData.append("content", this.$refs.content.internalValue);
       formData.append("tags", JSON.stringify(this.$refs.tags.internalValue));
       formData.append("classify", this.$refs.classify.internalValue);
-      console.log(this.pics);
-      formData.append("pics", this.pics);
+      formData.append("pics", JSON.stringify(this.pics));
 
       this.axios
         .post("/publishIdea", formData)
@@ -352,9 +354,15 @@ export default {
     },
     getNewContent: function() {
       this.axios
-        .get("/homepage?page=" + this.pageNum++)
+        .get("/homepage?page=" + this.pageNum)
         .then(res => {
-          console.log(res);
+          console.log(res.data);
+          if (res.data.code === 200) {
+            this.publishList.push(...res.data.publishList);
+            this.pageNum++;
+          } else {
+            console.log(res.data);
+          }
         })
         .catch();
     },
@@ -381,6 +389,18 @@ export default {
         }.bind(this)
       )
       .catch();
+    this.axios
+      .get("/homepage?page=0")
+      .then(res => {
+        console.log(res.data);
+        if (res.data.code === 200) {
+          this.publishList.push(...res.data.publishList);
+          this.pageNum++;
+        } else {
+          console.log(res.data);
+        }
+      })
+      .catch();
   },
   destroyed() {
     window.removeEventListener("scroll", this.scrollThrottle);
@@ -394,7 +414,7 @@ export default {
 .pages-container {
   display: grid;
   grid-template-columns: 10% 45% 25% 5%;
-  grid-template-rows: 1fr repeat(3, 5fr) 2fr;
+  grid-template-rows: 1fr repeat(5, 5fr) 2fr;
   grid-row-gap: 2%;
   grid-column-gap: 5%;
 
@@ -421,7 +441,7 @@ export default {
   .side-container {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 10% 20% 30%;
+    grid-template-rows: 10% 15% 30%;
     grid-row-gap: 3%;
 
     grid-column-start: 3;
