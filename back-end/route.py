@@ -89,7 +89,10 @@ def homepage():
     if request.method == 'GET':
         page = int(request.args.get("page"))
         res = database.publish_query_nskips(page * 5)
-
+        homePageList = {}
+        if res == "null":
+            res = {"code":500,"msg":"没有数据可以返回"}
+            return make_response(res)
         for publish in res:
 
             if publish["type"] == 0:
@@ -100,7 +103,7 @@ def homepage():
                 del result['_id']
                 del result['userId']
 
-                outcome = result
+                result.append(homePageList)
 
             elif publish["type"] == 1:
                 result = database.idea(publish["parentId"])
@@ -109,7 +112,7 @@ def homepage():
                 result["avatarUrl"] = database.query_avatarUrl(result['userId'])
                 del result['_id']
                 del result['userId']
-                outcome = result
+                result.append(homePageList)
 
             elif publish["type"] == 2:
                 result = database.video(publish["parentId"])
@@ -117,9 +120,9 @@ def homepage():
                 result["avatarUrl"] = database.query_avatarUrl(result['userId'])
                 del result['_id']
                 del result['userId']
-                outcome = result
+                result.append(homePageList)
 
-        res = {"code": 200, "msg": "请求成功", "homePageList": outcome}
+        res = {"code": 200, "msg": "请求成功", "publishList": homePageList}
         return make_response(res)
 
 
@@ -133,7 +136,7 @@ def blue_book():
         subTitle = request.form.get("subTitle")
         articleContent = request.form.get("articleContent")
         classify = request.form.get("classify")
-        tags = request.form.get("tags")
+        tags = json.loads(request.form.get("tags"))
         cover = request.form.get("cover")
 
         _id = database.article_insert(createTime, userId, title, subTitle,
@@ -154,7 +157,7 @@ def thinking():
 
         createTime = request.form.get("createTime")
 
-        pics = request.form.get("pics")
+        pics = json.loads(request.form.get("pics"))
         ideaContent = request.form.get("content")
 
         classify = request.form.get("classify")
@@ -180,7 +183,7 @@ def movie_camera():
         videoUrl = request.form.get("videoUrl")
         title = request.form.get("title")
         classify = request.form.get("classify")
-        tags = request.form.get("tags")
+        tags = json.loads(request.form.get("tags"))
         _id = database.video_insert(createTime, userId, title,
                                     classify, tags, videoUrl)
 
