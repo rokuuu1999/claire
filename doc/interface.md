@@ -159,3 +159,52 @@
     - paramter : 
         - file : 
         - type :
+    
+- 最热门的5篇文章
+
+    - path : /popularArticle
+
+    - method : GET
+
+    - paramter :
+
+    - 返回值 :
+
+        - 成功 :
+
+            ```json
+            [
+                {
+                    "id":"",
+                    "title":""
+                }
+            ]
+            ```
+
+            
+
+- 根据标签查询发布
+
+    - path : /articlesOfTag
+
+    - method : GET
+
+    - paramter :
+
+        - tagName : String
+
+    - 返回值 :
+
+        - 成功 :
+
+            ```json
+            [
+                {
+                    "id":"",
+                    "type":0,
+                    "title":""
+                }
+            ]
+            ```
+
+            
