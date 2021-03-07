@@ -57,12 +57,13 @@ class db:
             return True
         else:
             return False
+
     def cookies_query(self, userid):
         res = self.cookieCL.find_one({"userId": userid})
         if res:
-            return True
+            return res
         else:
-            return False
+            return {}
 
     # Article
 
@@ -108,12 +109,13 @@ class db:
             return False
 
     # Idea
-    def idea(self,iid):
-        res = self.ideasCL.find_one({"_id":iid})
+    def idea(self, iid):
+        res = self.ideasCL.find_one({"_id": iid})
         if res:
             return res
         else:
             return False
+
     def thinking_insert(self, createTime, userId,
                         ideaContent, classify, tags, pics):
         _id = str(uuid4())
@@ -129,8 +131,8 @@ class db:
         return _id
 
     # Video
-    def video(self,vid):
-        res = self.videosCL.find_one({"_id":vid})
+    def video(self, vid):
+        res = self.videosCL.find_one({"_id": vid})
         if res:
             return res
         else:
@@ -169,8 +171,8 @@ class db:
         return publishList
 
     # Comment
-    def comment(self,id):
-        res = self.commentCL.find_one({"_id":id})
+    def comment(self, id):
+        res = self.commentCL.find_one({"_id": id})
         if res:
             return res
         else:

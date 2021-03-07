@@ -14,16 +14,18 @@ def login():
     if request.method == 'GET':
         res = request.cookies.get('userId')
         now = time.time()
-        expireTime = database.cookies_query(res)["expireTime"]
-        if expireTime > now:
+        res = database.cookies_query(res)
+
+        if res == {}:
+            outcome = {"code": 500, "msg": "用户身份不存在"}
+        elif res["expireTime"] > now:
             outcome = {"code": 200, "msg": "cookies未过期"}
-            resp = make_response(outcome)
-        elif expireTime <= now:
+        elif res["expireTime"] <= now:
             outcome = {"code": 500, "msg": "cookies已过期"}
-            resp = make_response(outcome)
         else:
             outcome = {"code": 500, "msg": "未查询到cookies，请重新登录"}
-            resp = make_response(outcome)
+
+        resp = make_response(outcome)
     else:
         user_name = request.form.get("username")
         user_password = request.form.get("password")

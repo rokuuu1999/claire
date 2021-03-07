@@ -13,7 +13,7 @@
         >
           <template slot="body">
             <idea-card
-              :content="item.content"
+              :content="item.ideaContent"
               :pics="item.pics"
               v-if="item.type == 1"
             ></idea-card>
