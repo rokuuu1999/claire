@@ -123,8 +123,8 @@ def blue_book():
         classify = request.form.get("classify")
         tags = json.loads(request.form.get("tags"))
         cover = request.form.get("cover")
-        if (userId and createTime and title and subTitle and articleContent and
-            classify and tags and cover) == 0:
+        if not (userId and createTime and title and subTitle and articleContent and
+                classify and tags and cover):
             return make_response({"code": 500, "msg": "所有元素必须填写"})
         else:
             _id = database.article_insert(createTime, userId, title, subTitle,
@@ -143,8 +143,8 @@ def thinking():
         ideaContent = request.form.get("content")
         classify = request.form.get("classify")
         tags = json.loads(request.form.get("tags"))
-        if (userId and createTime and pics and ideaContent and
-            classify and tags) == 0:
+        if not (userId and createTime and pics and ideaContent and
+                classify and tags):
             return make_response({"code": 500, "msg": "所有元素必须填写"})
         else:
             _id = database.thinking_insert(createTime, userId,
@@ -163,8 +163,8 @@ def movie_camera():
         title = request.form.get("title")
         classify = request.form.get("classify")
         tags = json.loads(request.form.get("tags"))
-        if (userId and createTime and title and videoUrl and title and
-            classify and tags) == 0:
+        if not (userId and createTime and title and videoUrl and title and
+                classify and tags):
             return make_response({"code": 500, "msg": "所有元素必须填写"})
         else:
             _id = database.video_insert(createTime, userId, title,
