@@ -77,8 +77,8 @@ class db:
     def hot_articles(self):
         pass
 
-    def article_insert(self, createTime, userId, title, subTitle,
-                       articleContent, classify, tags, cover,
+    def article_insert(self, createTime, userId, title, subTitle,commentNum,likeNum,comments,
+                       articleContent, classify, tags, cover,hot,type
                        ):
         _id = str(uuid4())
         self.articleCL.insert({"_id": _id,
@@ -90,9 +90,20 @@ class db:
                                "classify": classify,
                                "tags": tags,
                                "cover": cover,
-
+                               "commentNum":commentNum,
+                               "likeNum":likeNum,
+                               "comments":comments,
+                               "hot":hot,
+                               "type":type
                                })
         return _id
+
+    def fire_article(self):
+        article_list = self.articleCL.find({},{"_id":1,"title":1}).sort("hot",-1).limit(5)
+        if article_list:
+            return article_list
+        else:
+            return False
 
     # Tag
     def insert_tag(self, tags):
@@ -108,6 +119,19 @@ class db:
         else:
             return False
 
+    def tag_query(self,tag):
+        article = self.articleCL.find({"tags": {"$elemMatch": {"$eq": tag}}},{"_id":1,"title":1,"type":1,"createTime":1})
+        idea = self.ideasCL.find({"tags": {"$elemMatch": {"$eq": tag}}},{"_id":1,"title":1,"type":1,"createTime":1})
+        video = self.videosCL.find({"tags": {"$elemMatch": {"$eq": tag}}},{"_id":1,"title":1,"type":1,"createTime":1})
+        contain_list = []
+
+        def takeCreateTime(elem):
+            return elem["createTime"]
+        contain_list.append(article)
+        contain_list.append(idea)
+        contain_list.append(video)
+        contain_list.sort(key=takeCreateTime,reverse=True)
+        return contain_list
     # Idea
     def idea(self, iid):
         res = self.ideasCL.find_one({"_id": iid})
@@ -116,8 +140,8 @@ class db:
         else:
             return False
 
-    def thinking_insert(self, createTime, userId,
-                        ideaContent, classify, tags, pics):
+    def thinking_insert(self, createTime, userId,commentNum,likeNum,comments,
+                        ideaContent, classify, tags, pics,type):
         _id = str(uuid4())
         self.ideasCL.insert({
             "_id": _id,
@@ -127,6 +151,10 @@ class db:
             "classify": classify,
             "tags": tags,
             "pics": pics,
+            "commentNum":commentNum,
+            "likeNum":likeNum,
+            "comments":comments,
+            "type": type
         })
         return _id
 
@@ -138,19 +166,21 @@ class db:
         else:
             return False
 
-    def video_insert(self, createTime, userId, title,
-                     classify, tags, videoUrl):
+    def video_insert(self, createTime, userId, title,commentNum,likeNum,comments,
+                     classify, tags, videoUrl,type):
         _id = str(uuid4())
         self.videosCL.insert({
             "_id": _id,
             "title": title,
             "videoUrl": videoUrl,
             "userId": userId,
-
             "createTime": createTime,
             "classify": classify,
             "tags": tags,
-
+            "commentNum":commentNum,
+            "likeNum":likeNum,
+            "comments":comments,
+            "type": type
         })
         return _id
 
@@ -177,3 +207,4 @@ class db:
             return res
         else:
             return False
+

@@ -125,13 +125,18 @@ def blue_book():
         classify = request.form.get("classify")
         tags = json.loads(request.form.get("tags"))
         cover = request.form.get("cover")
+        commentNum = 0
+        likeNum = 0
+        comments = []
+        hot = 0
+        type = '0'
         if not (userId and createTime and title and subTitle and articleContent and
                 classify and tags and cover):
             return make_response({"code": 500, "msg": "所有元素必须填写"})
         else:
-            _id = database.article_insert(createTime, userId, title, subTitle,
-                                          articleContent, classify, tags, cover)
-            database.publish_insert(_id, createTime, 0)
+            _id = database.article_insert(createTime, userId, title, subTitle, commentNum, likeNum, comments,
+                                          articleContent, classify, tags, cover, hot, type)
+            database.publish_insert(_id, createTime, '0')
             resp = {"code": 200, "msg": "插入文章成功"}
             return make_response(resp)
 
@@ -145,13 +150,17 @@ def thinking():
         ideaContent = request.form.get("content")
         classify = request.form.get("classify")
         tags = json.loads(request.form.get("tags"))
+        commentNum = 0
+        likeNum = 0
+        comments = []
+        type = '1'
         if not (userId and createTime and pics and ideaContent and
                 classify and tags):
             return make_response({"code": 500, "msg": "所有元素必须填写"})
         else:
-            _id = database.thinking_insert(createTime, userId,
-                                           ideaContent, classify, tags, pics)
-            database.publish_insert(_id, createTime, 1)
+            _id = database.thinking_insert(createTime, userId, commentNum, likeNum, comments,
+                                           ideaContent, classify, tags, pics, type)
+            database.publish_insert(_id, createTime, '1')
             database.insert_tag(tags)
             return make_response({"code": 200, "msg": "插入想法成功"})
 
@@ -165,13 +174,17 @@ def movie_camera():
         title = request.form.get("title")
         classify = request.form.get("classify")
         tags = json.loads(request.form.get("tags"))
-        if not (userId and createTime and title and videoUrl and title and
+        commentNum = 0
+        likeNum = 0
+        comments = []
+        type = '2'
+        if not (userId and createTime and videoUrl  and
                 classify and tags):
             return make_response({"code": 500, "msg": "所有元素必须填写"})
         else:
-            _id = database.video_insert(createTime, userId, title,
-                                        classify, tags, videoUrl)
-            database.publish_insert(_id, createTime, 2)
+            _id = database.video_insert(createTime, userId, title, commentNum, likeNum, comments,
+                                        classify, tags, videoUrl, type)
+            database.publish_insert(_id, createTime, '2')
             return make_response({"code": 200, "msg": "插入video成功"})
 
 
@@ -193,10 +206,9 @@ def upload():
 
 
 @app.route('/comment', methods=['GET'])
-def comment():
+def commentquery():
     if request.method == 'GET':
         pageId = request.args.get('parentId')
-
         comment = database.comment(pageId)
         pageList = {}
         type = request.args.get('type')
@@ -216,3 +228,23 @@ def comment():
         pageList["avatarUrl"] = database.query_avatarUrl(pageList["userId"])
         del pageList['userId']
         return make_response({"code": 200, "msg": "查询成功", "page": pageList})
+
+
+@app.route('/popularArticle', methods=['GET'])
+def firearticle():
+    if request.method == 'GET':
+        top5_article = database.fire_article()
+        if top5_article:
+            return make_response({"code": 200, "msg": "查取五篇热门成功", "top5_article": top5_article})
+        else:
+            return False
+
+
+@app.route('/articlesOfTag', methods=['GET'])
+def tag_query_article():
+    if request.method == 'GET':
+        tag = request.args.get('tagName')
+        contain = database.tag_query(tag)
+        return make_response({"code": 200, "msg": "根据标签查询成功", "tag_query": contain})
+    else:
+        return False
