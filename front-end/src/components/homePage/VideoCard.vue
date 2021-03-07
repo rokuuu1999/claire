@@ -42,9 +42,7 @@ export default {
       createTime: ""
     };
   },
-  mounted() {
-    console.log(this.cover);
-  }
+  mounted() {}
 };
 </script>
 

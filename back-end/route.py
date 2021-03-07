@@ -90,12 +90,13 @@ def tags():
 def homepage():
     if request.method == 'GET':
         page = int(request.args.get("page"))
-        res = database.publish_query_nskips(page * 5)
+        res = database.publish_query_nskips(page * 3)
         homePageList = []
         if not res:
             res = {"code": 500, "msg": "没有数据可以返回"}
             return make_response(res)
         for publish in res:
+            print(publish)
             if publish["type"] == 0:
                 result = database.article(publish["parentId"])
             elif publish["type"] == 1:
@@ -129,14 +130,14 @@ def blue_book():
         likeNum = 0
         comments = []
         hot = 0
-        type = '0'
         if not (userId and createTime and title and subTitle and articleContent and
                 classify and tags and cover):
             return make_response({"code": 500, "msg": "所有元素必须填写"})
         else:
             _id = database.article_insert(createTime, userId, title, subTitle, commentNum, likeNum, comments,
-                                          articleContent, classify, tags, cover, hot, type)
-            database.publish_insert(_id, createTime, '0')
+                                          articleContent, classify, tags, cover, hot)
+            database.publish_insert(_id, createTime, 0)
+            database.insert_tag(tags)
             resp = {"code": 200, "msg": "插入文章成功"}
             return make_response(resp)
 
@@ -153,14 +154,13 @@ def thinking():
         commentNum = 0
         likeNum = 0
         comments = []
-        type = '1'
         if not (userId and createTime and pics and ideaContent and
                 classify and tags):
             return make_response({"code": 500, "msg": "所有元素必须填写"})
         else:
             _id = database.thinking_insert(createTime, userId, commentNum, likeNum, comments,
-                                           ideaContent, classify, tags, pics, type)
-            database.publish_insert(_id, createTime, '1')
+                                           ideaContent, classify, tags, pics)
+            database.publish_insert(_id, createTime, 1)
             database.insert_tag(tags)
             return make_response({"code": 200, "msg": "插入想法成功"})
 
@@ -177,14 +177,14 @@ def movie_camera():
         commentNum = 0
         likeNum = 0
         comments = []
-        type = '2'
-        if not (userId and createTime and videoUrl  and
+        if not (userId and createTime and videoUrl and
                 classify and tags):
             return make_response({"code": 500, "msg": "所有元素必须填写"})
         else:
             _id = database.video_insert(createTime, userId, title, commentNum, likeNum, comments,
-                                        classify, tags, videoUrl, type)
-            database.publish_insert(_id, createTime, '2')
+                                        classify, tags, videoUrl)
+            database.publish_insert(_id, createTime, 2)
+            database.insert_tag(tags)
             return make_response({"code": 200, "msg": "插入video成功"})
 
 
@@ -240,11 +240,10 @@ def firearticle():
             return False
 
 
-@app.route('/articlesOfTag', methods=['GET'])
-def tag_query_article():
+@app.route('/tagQuery/<tagName>', methods=['GET'])
+def tag_query_article(tagName):
     if request.method == 'GET':
-        tag = request.args.get('tagName')
-        contain = database.tag_query(tag)
-        return make_response({"code": 200, "msg": "根据标签查询成功", "tag_query": contain})
+        contain = database.tag_query(tagName)
+        return make_response({"code": 200, "msg": "根据标签查询成功", "publishList": contain})
     else:
         return False

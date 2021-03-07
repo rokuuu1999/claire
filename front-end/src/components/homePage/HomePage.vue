@@ -30,7 +30,13 @@
           </template>
         </publish-card>
       </template>
-      <Pagination class="pagination"></Pagination>
+      <div class="progress-circular" v-if="newContentFlag">
+        <v-progress-circular
+          :size="50"
+          color="primary"
+          indeterminate
+        ></v-progress-circular>
+      </div>
     </div>
     <div class="side-container">
       <v-card class="publish-container">
@@ -53,9 +59,11 @@
           <v-chip
             small
             outlined
+            link
             color="primary"
             class="tag"
             v-for="(item, index) in tags"
+            :to="{ name: 'tagQuery', params: { tagName: item } }"
             :key="index"
           >
             <v-icon left small>
@@ -191,12 +199,10 @@
 
 <script>
 import ArticleCard from "@/components/homePage/ArticleCard";
-import Pagination from "@/components/base/Pagination";
 import { throttle } from "@/assets/js/GlobalFunction";
 import VideoCard from "@/components/homePage/VideoCard";
 import PublishCard from "@/components/homePage/PublishCard";
 import IdeaCard from "@/components/homePage/IdeaCard";
-import axios from "axios";
 
 export default {
   name: "HomePage",
@@ -204,8 +210,7 @@ export default {
     IdeaCard,
     PublishCard,
     VideoCard,
-    ArticleCard,
-    Pagination
+    ArticleCard
   },
   data() {
     return {
@@ -361,11 +366,13 @@ export default {
       this.axios
         .get("/homepage?page=" + this.pageNum)
         .then(res => {
-          console.log(res.data);
           if (res.data.code === 200) {
             this.publishList.push(...res.data.publishList);
             this.pageNum++;
+            this.newContentFlag = true;
           } else {
+            console.log(this.newContentFlag);
+            this.newContentFlag = false;
             console.log(res.data);
           }
         })
@@ -386,7 +393,7 @@ export default {
     window.addEventListener("scroll", this.scrollThrottle);
   },
   mounted: function() {
-    axios
+    this.axios
       .get("/tags")
       .then(
         function(res) {
@@ -396,15 +403,16 @@ export default {
       .catch();
     this.axios
       .get("/homepage?page=0")
-      .then(res => {
-        console.log(res.data);
-        if (res.data.code === 200) {
-          this.publishList.push(...res.data.publishList);
-          this.pageNum++;
-        } else {
-          console.log(res.data);
-        }
-      })
+      .then(
+        function(res) {
+          if (res.data.code === 200) {
+            this.publishList.push(...res.data.publishList);
+            this.pageNum++;
+          } else {
+            console.log(res.data);
+          }
+        }.bind(this)
+      )
       .catch();
   },
   destroyed() {
@@ -423,6 +431,7 @@ export default {
   .content-container {
     display: flex;
     flex-direction: column;
+    min-width: 50vw;
     margin-top: 30px;
     .page-card {
       display: flex;
@@ -432,6 +441,13 @@ export default {
       width: 50vw;
       height: 50vh;
       margin: 30px 0 30px 0;
+    }
+    .progress-circular {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      margin: 0 0 20px 0;
     }
   }
 
@@ -443,7 +459,7 @@ export default {
     grid-row-gap: 3%;
 
     width: 25%;
-    height: 200vh;
+    height: 150vh;
     margin-top: 60px;
     justify-items: center;
 

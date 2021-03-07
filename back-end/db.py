@@ -77,9 +77,8 @@ class db:
     def hot_articles(self):
         pass
 
-    def article_insert(self, createTime, userId, title, subTitle,commentNum,likeNum,comments,
-                       articleContent, classify, tags, cover,hot,type
-                       ):
+    def article_insert(self, createTime, userId, title, subTitle, commentNum, likeNum, comments,
+                       articleContent, classify, tags, cover, hot):
         _id = str(uuid4())
         self.articleCL.insert({"_id": _id,
                                "userId": userId,
@@ -90,16 +89,15 @@ class db:
                                "classify": classify,
                                "tags": tags,
                                "cover": cover,
-                               "commentNum":commentNum,
-                               "likeNum":likeNum,
-                               "comments":comments,
-                               "hot":hot,
-                               "type":type
+                               "commentNum": commentNum,
+                               "likeNum": likeNum,
+                               "comments": comments,
+                               "hot": hot
                                })
         return _id
 
     def fire_article(self):
-        article_list = self.articleCL.find({},{"_id":1,"title":1}).sort("hot",-1).limit(5)
+        article_list = self.articleCL.find({}, {"_id": 1, "title": 1}).sort("hot", -1).limit(5)
         if article_list:
             return article_list
         else:
@@ -119,19 +117,32 @@ class db:
         else:
             return False
 
-    def tag_query(self,tag):
-        article = self.articleCL.find({"tags": {"$elemMatch": {"$eq": tag}}},{"_id":1,"title":1,"type":1,"createTime":1})
-        idea = self.ideasCL.find({"tags": {"$elemMatch": {"$eq": tag}}},{"_id":1,"title":1,"type":1,"createTime":1})
-        video = self.videosCL.find({"tags": {"$elemMatch": {"$eq": tag}}},{"_id":1,"title":1,"type":1,"createTime":1})
+    def tag_query(self, tag):
+        article = self.articleCL.find({"tags": {"$elemMatch": {"$eq": tag}}},
+                                      {"_id": 1, "title": 1, "createTime": 1})
+        idea = self.ideasCL.find({"tags": {"$elemMatch": {"$eq": tag}}},
+                                 {"_id": 1, "ideaContent": 1, "createTime": 1})
+        video = self.videosCL.find({"tags": {"$elemMatch": {"$eq": tag}}},
+                                   {"_id": 1, "title": 1, "createTime": 1})
         contain_list = []
 
         def takeCreateTime(elem):
             return elem["createTime"]
-        contain_list.append(article)
-        contain_list.append(idea)
-        contain_list.append(video)
-        contain_list.sort(key=takeCreateTime,reverse=True)
+
+        for i in article:
+            contain_list.append(i)
+            i["type"] = 0
+        for i in idea:
+            i["title"] = i["ideaContent"][:20] + "  ..."
+            i["type"] = 1
+            del i["ideaContent"]
+            contain_list.append(i)
+        for i in video:
+            i["type"] = 2
+            contain_list.append(i)
+        contain_list.sort(key=takeCreateTime, reverse=True)
         return contain_list
+
     # Idea
     def idea(self, iid):
         res = self.ideasCL.find_one({"_id": iid})
@@ -140,8 +151,8 @@ class db:
         else:
             return False
 
-    def thinking_insert(self, createTime, userId,commentNum,likeNum,comments,
-                        ideaContent, classify, tags, pics,type):
+    def thinking_insert(self, createTime, userId, commentNum, likeNum, comments,
+                        ideaContent, classify, tags, pics):
         _id = str(uuid4())
         self.ideasCL.insert({
             "_id": _id,
@@ -151,10 +162,9 @@ class db:
             "classify": classify,
             "tags": tags,
             "pics": pics,
-            "commentNum":commentNum,
-            "likeNum":likeNum,
-            "comments":comments,
-            "type": type
+            "commentNum": commentNum,
+            "likeNum": likeNum,
+            "comments": comments
         })
         return _id
 
@@ -166,8 +176,8 @@ class db:
         else:
             return False
 
-    def video_insert(self, createTime, userId, title,commentNum,likeNum,comments,
-                     classify, tags, videoUrl,type):
+    def video_insert(self, createTime, userId, title, commentNum, likeNum, comments,
+                     classify, tags, videoUrl):
         _id = str(uuid4())
         self.videosCL.insert({
             "_id": _id,
@@ -177,10 +187,9 @@ class db:
             "createTime": createTime,
             "classify": classify,
             "tags": tags,
-            "commentNum":commentNum,
-            "likeNum":likeNum,
-            "comments":comments,
-            "type": type
+            "commentNum": commentNum,
+            "likeNum": likeNum,
+            "comments": comments
         })
         return _id
 
@@ -194,7 +203,7 @@ class db:
 
     def publish_query_nskips(self, num):
         mycol = self.myDB["Publish"]
-        res = mycol.find().sort("createTime", -1).skip(num).limit(5)
+        res = mycol.find().sort("createTime", -1).skip(num).limit(3)
         publishList = []
         for item in res:
             publishList.append(item)
@@ -207,4 +216,3 @@ class db:
             return res
         else:
             return False
-
