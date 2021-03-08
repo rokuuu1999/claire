@@ -82,7 +82,7 @@ class db:
         _id = str(uuid4())
         self.articleCL.insert({"_id": _id,
                                "userId": userId,
-                               "Title": title,
+                               "title": title,
                                "subTitle": subTitle,
                                "createTime": createTime,
                                "articleContent": articleContent,

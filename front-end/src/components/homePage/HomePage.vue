@@ -62,7 +62,7 @@
             link
             color="primary"
             class="tag"
-            v-for="(item, index) in tags"
+            v-for="(item, index) in hotTags"
             :to="{ name: 'tagQuery', params: { tagName: item } }"
             :key="index"
           >
@@ -82,7 +82,7 @@
             <v-list-item-group>
               <v-list-item
                 color="primary"
-                v-for="(article, index) in articles"
+                v-for="(article, index) in hotArticles"
                 :key="index"
               >
                 <v-list-item-content>{{ article.title }}</v-list-item-content>
@@ -118,7 +118,11 @@
                   </label>
                 </v-avatar>
               </v-col>
-              <v-col v-for="(pic, index) in pics" :key="index" md="2">
+              <v-col
+                v-for="(pic, index) in publishIdea.pics"
+                :key="index"
+                md="2"
+              >
                 <v-img
                   :src="pic"
                   :lazy-src="pic"
@@ -215,33 +219,9 @@ export default {
   data() {
     return {
       overlay: false,
-      pageNum: 0,
       newContentFlag: true,
-      pics: [],
-      publishButton: [
-        {
-          title: "发想法",
-          icon: "lightbulb-on",
-          color: "light-blue",
-          event: this.changeOverlay
-        },
-        {
-          title: "发视频",
-          icon: "video",
-          color: "teal accent-3",
-          event: () => {
-            this.$router.push("/publish/video");
-          }
-        },
-        {
-          title: "发文章",
-          icon: "clipboard-edit",
-          color: "orange lighten-1",
-          event: () => {
-            this.$router.push("/publish/article");
-          }
-        }
-      ],
+      scrollFunc: null,
+      pageNum: 0,
       publishList: [],
       publishListTemp: [
         {
@@ -298,12 +278,37 @@ export default {
             "http://kodo.wendau.com/%E7%9B%B8%E4%BF%A1%E6%9C%AA%E6%9D%A5.jpg"
         }
       ],
+      hotTags: [],
+      publishButton: [
+        {
+          title: "发想法",
+          icon: "lightbulb-on",
+          color: "light-blue",
+          event: this.changeOverlay
+        },
+        {
+          title: "发视频",
+          icon: "video",
+          color: "teal accent-3",
+          event: () => {
+            this.$router.push("/publish/video");
+          }
+        },
+        {
+          title: "发文章",
+          icon: "clipboard-edit",
+          color: "orange lighten-1",
+          event: () => {
+            this.$router.push("/publish/article");
+          }
+        }
+      ],
       publishIdea: {
         classify: ["琐碎吐槽", "感悟思考", "学习点滴", "仅是记录", "我不知道"],
-        tags: []
+        tags: [],
+        pics: []
       },
-      tags: [],
-      articles: [
+      hotArticles: [
         {
           title: "Debug模式和Release模式有什么区别？"
         },
@@ -319,8 +324,7 @@ export default {
         {
           title: "Debug模式和Release模式有什么区别？"
         }
-      ],
-      scrollFunc: null
+      ]
     };
   },
   methods: {
@@ -371,9 +375,7 @@ export default {
             this.pageNum++;
             this.newContentFlag = true;
           } else {
-            console.log(this.newContentFlag);
             this.newContentFlag = false;
-            console.log(res.data);
           }
         })
         .catch();
@@ -397,7 +399,7 @@ export default {
       .get("/tags")
       .then(
         function(res) {
-          this.tags = res.data.tagList;
+          this.hotTags = res.data.tagList;
         }.bind(this)
       )
       .catch();
@@ -411,6 +413,14 @@ export default {
           } else {
             console.log(res.data);
           }
+        }.bind(this)
+      )
+      .catch();
+    this.axios
+      .get("/popularArticle")
+      .then(
+        function(res) {
+          this.hotArticles = res.data.articleList;
         }.bind(this)
       )
       .catch();
@@ -433,6 +443,7 @@ export default {
     flex-direction: column;
     min-width: 50vw;
     margin-top: 30px;
+
     .page-card {
       display: flex;
       flex-direction: column;
@@ -442,12 +453,13 @@ export default {
       height: 50vh;
       margin: 30px 0 30px 0;
     }
+
     .progress-circular {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 100%;
-      margin: 0 0 20px 0;
+      margin: 0 0 50px 0;
     }
   }
 
@@ -471,6 +483,7 @@ export default {
         flex-direction: column;
       }
     }
+
     .tags-container {
       display: flex;
       flex-flow: row wrap;
@@ -482,6 +495,7 @@ export default {
         margin: 3px;
       }
     }
+
     .hot-articles-container {
       width: 100%;
     }

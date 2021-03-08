@@ -95,15 +95,14 @@ def homepage():
         if not res:
             res = {"code": 500, "msg": "没有数据可以返回"}
             return make_response(res)
+
         for publish in res:
-            print(publish)
             if publish["type"] == 0:
                 result = database.article(publish["parentId"])
             elif publish["type"] == 1:
                 result = database.idea(publish["parentId"])
             else:
                 result = database.video(publish["parentId"])
-
             result["type"] = publish["type"]
             result["authorName"] = database.query_username(result['userId'])
             result["avatarUrl"] = database.query_avatarUrl(result['userId'])
@@ -234,8 +233,11 @@ def commentquery():
 def firearticle():
     if request.method == 'GET':
         top5_article = database.fire_article()
+        articleList = []
         if top5_article:
-            return make_response({"code": 200, "msg": "查取五篇热门成功", "top5_article": top5_article})
+            for article in top5_article:
+                articleList.append(article)
+            return make_response({"code": 200, "msg": "查取五篇热门成功", "articleList": articleList})
         else:
             return False
 
