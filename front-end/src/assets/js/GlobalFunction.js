@@ -8,6 +8,10 @@ export function getCookie(cname) {
   return "";
 }
 
+export function changeTimeStamp(timeStamp) {
+  return new Date(timeStamp).toLocaleString();
+}
+
 export function uploadFile(file) {
   let xhr = new XMLHttpRequest();
   xhr.open("POST", "/uploadFile", true);

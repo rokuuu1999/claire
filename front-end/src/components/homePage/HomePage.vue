@@ -3,6 +3,8 @@
     <div class="content-container">
       <template v-for="(item, index) in publishList">
         <publish-card
+          :type="item.type"
+          :id="item.publishId"
           :title="item.title"
           :authorName="item.authorName"
           :avatarUrl="item.avatarUrl"
@@ -392,6 +394,7 @@ export default {
       .then(
         function(res) {
           if (res.data.code === 200) {
+            console.log(res.data.publishList);
             this.publishList.push(...res.data.publishList);
             this.pageNum++;
           } else {

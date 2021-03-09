@@ -5,17 +5,22 @@ import Register from "@/components/loginPage/Register";
 import Home from "@/views/Home";
 import NotFound from "@/views/NotFound";
 import HomePage from "@/components/homePage/HomePage";
-import SelfPage from "@/components/selfPage/SelfPage";
-import ArticlePage from "@/components/articlePage/ArticlePage";
-import SecuritySetting from "@/components/selfPage/setting/SecuritySetting";
-import SelfInfoSetting from "@/components/selfPage/setting/SelfInfoSetting";
+import PublishPage from "@/components/homePage/PublishPage";
+
 import ArticlePublishPage from "@/components/publishPage/ArticlePublishPage";
 import publishPage from "@/components/publishPage/publishPage";
 import VideoPublishPage from "@/components/publishPage/VideoPublishPage";
+
+import SecuritySetting from "@/components/selfPage/setting/SecuritySetting";
+import SelfInfoSetting from "@/components/selfPage/setting/SelfInfoSetting";
+import SelfPage from "@/components/selfPage/SelfPage";
 import SelfPageBody from "@/components/selfPage/SelfPageBody";
 import FocusUser from "@/components/selfPage/focus/FocusUser";
 import FocusTag from "@/components/selfPage/focus/FocusTag";
-import PublishPage from "@/components/homePage/PublishPage";
+
+import PostLayout from "@/components/postPage/PostLayout";
+import ArticlePage from "@/components/postPage/ArticlePage";
+import IdeaPage from "@/components/postPage/IdeaPage";
 
 Vue.use(VueRouter);
 
@@ -43,7 +48,24 @@ const routes = [
       {
         path: "post",
         name: "post",
-        component: ArticlePage
+        component: PostLayout,
+        children: [
+          {
+            name: "ArticleDetail",
+            path: "0/:id",
+            component: ArticlePage
+          },
+          {
+            name: "IdeaDetail",
+            path: "1/:id",
+            component: IdeaPage
+          },
+          {
+            name: "VideoDetail",
+            path: "2/:id",
+            component: ArticlePage
+          }
+        ]
       },
       {
         path: "tagQuery/:tagName",
