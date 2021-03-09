@@ -63,18 +63,29 @@ def register():
         return resp
 
 
-@app.route('/article', methods=['GET'])
-def articles():
-    aid = request.args.get('aid')
-    article = database.article(aid)
-    if article:
-        result = {"code": 200, "msg": "请求成功", "contain": article}
-    elif not article:
-        result = {"code": 500, "msg": "未查到相关文章，请检查数据是否正确"}
-    else:
-        result = {"code": 500, "msg": "未知错误"}
-    return make_response(result)
+@app.route('/post', methods=['GET'])
+def detail_of_page():
+    id = request.args.get("id")
+    type = request.args.get("type")
 
+    if type == '0':
+        article = database.article(id)
+        article['username'] = database.query_username(article['userId'])
+        article['avatarUrl'] = database.query_avatarUrl(article['userId'])
+        result = {"code":200,"msg":"查找文章成功","contain":article}
+    elif type == '1':
+        idea = database.idea(id)
+        idea['username'] = database.query_username(idea['userId'])
+        idea['avatarUrl'] = database.query_avatarUrl(idea['userId'])
+        result = {"code":200,"msg":"查找想法成功","contain":idea}
+    elif type == '2':
+        video = database.video(id)
+        video['username'] = database.query_username(video['userId'])
+        video['avatarUrl'] = database.query_avatarUrl(video['userId'])
+        result = {"code":200,"msg":"查找视频成功","contain":video}
+    else:
+        result = {"code":500,"msg":"请检查参数是否正确",}
+    return make_response(result)
 
 @app.route('/tags', methods=['GET'])
 def tags():
