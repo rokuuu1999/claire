@@ -308,23 +308,7 @@ export default {
         tags: [],
         pics: []
       },
-      hotArticles: [
-        {
-          title: "Debug模式和Release模式有什么区别？"
-        },
-        {
-          title: "Debug模式和Release模式有什么区别？"
-        },
-        {
-          title: "Debug模式和Release模式有什么区别？"
-        },
-        {
-          title: "Debug模式和Release模式有什么区别？"
-        },
-        {
-          title: "Debug模式和Release模式有什么区别？"
-        }
-      ]
+      hotArticles: []
     };
   },
   methods: {

@@ -68,7 +68,6 @@ def articles():
     aid = request.args.get('aid')
     article = database.article(aid)
     if article:
-        del article['userId']
         result = {"code": 200, "msg": "请求成功", "contain": article}
     elif not article:
         result = {"code": 500, "msg": "未查到相关文章，请检查数据是否正确"}
