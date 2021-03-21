@@ -208,3 +208,28 @@
             ```
 
             
+
+- 发表评论
+
+    - path : /comment/post
+
+    - method : POST 
+
+    - paramter : 
+
+        - userId
+        - publishId
+        - comment
+        - createTime
+
+        
+
+- 回复评论
+
+    - path :  /comment/reply
+    - method : POST
+    - paramter : 
+        - userId
+        - comment
+        - replyTo
+        - createTime
