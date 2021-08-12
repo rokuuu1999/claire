@@ -394,7 +394,6 @@ export default {
       .then(
         function(res) {
           if (res.data.code === 200) {
-            console.log(res.data.publishList);
             this.publishList.push(...res.data.publishList);
             this.pageNum++;
           } else {
@@ -454,7 +453,7 @@ export default {
     position: relative;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 10% 15% 30%;
+    grid-template-rows: 10% 20% 30%;
     grid-row-gap: 3%;
 
     width: 25%;

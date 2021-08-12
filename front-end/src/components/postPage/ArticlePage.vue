@@ -1,16 +1,14 @@
 <template>
-  <div class="full-size">
-    <mavon-editor
-      class="md"
-      :value="contentData.articleContent"
-      :subfield="false"
-      :defaultOpen="'preview'"
-      :toolbarsFlag="false"
-      :editable="false"
-      :scrollStyle="true"
-      :ishljs="true"
-    ></mavon-editor>
-  </div>
+  <mavon-editor
+    class="md"
+    :value="contentData.articleContent"
+    :subfield="false"
+    :defaultOpen="'preview'"
+    :toolbarsFlag="false"
+    :editable="false"
+    :scrollStyle="true"
+    :ishljs="true"
+  ></mavon-editor>
 </template>
 
 <script>
@@ -31,9 +29,7 @@ export default {
     return {};
   },
   methods: {},
-  mounted() {
-    console.log(this.contentData);
-  }
+  mounted() {}
 };
 </script>
 

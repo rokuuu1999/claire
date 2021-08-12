@@ -75,7 +75,9 @@ export default {
       margin-left: 10px;
     }
   }
-
+  &-body {
+    margin: 20px 0;
+  }
   &-footer {
     display: flex;
     justify-content: space-between;

@@ -21,6 +21,7 @@ import FocusTag from "@/components/selfPage/focus/FocusTag";
 import PostLayout from "@/components/postPage/PostLayout";
 import ArticlePage from "@/components/postPage/ArticlePage";
 import IdeaPage from "@/components/postPage/IdeaPage";
+import VideoPage from "@/components/postPage/VideoPage";
 
 Vue.use(VueRouter);
 
@@ -63,7 +64,7 @@ const routes = [
           {
             name: "VideoDetail",
             path: "2/:id",
-            component: ArticlePage
+            component: VideoPage
           }
         ]
       },
@@ -160,7 +161,10 @@ const routes = [
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior() {
+    return { x: 0, y: 0 };
+  }
 });
 
 export default router;

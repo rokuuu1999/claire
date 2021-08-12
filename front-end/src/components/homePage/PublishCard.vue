@@ -82,7 +82,6 @@ export default {
   },
   methods: {
     articleDetail: function() {
-      console.log(this.type);
       this.$router.push({ path: "/post/" + this.type + "/" + this.id });
     }
   }

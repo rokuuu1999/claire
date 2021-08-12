@@ -11,7 +11,9 @@
             <div v-text="changeTimeStamp(this.publishTime)"></div>
           </div>
         </div>
-        <router-view :content-data="contentData"></router-view>
+        <div class="content-body">
+          <router-view :content-data="contentData"></router-view>
+        </div>
         <div class="content-footer">
           <v-btn
             small
@@ -411,7 +413,6 @@ export default {
           };
           this.tags = res.data.contain.tags;
           this.publishTime = Number(res.data.contain.createTime);
-          console.log(res.data.contain);
           if (type === 0) {
             this.contentData = {
               articleContent: res.data.contain.articleContent
@@ -423,9 +424,9 @@ export default {
             };
           } else {
             this.contentData = {
-              pics: res.data.contain.pics,
-              ideaContent: res.data.contain.ideaContent
+              videoUrl: res.data.contain.videoUrl
             };
+            console.log("contentData", this.contentData);
           }
         }.bind(this)
       )
@@ -470,6 +471,9 @@ export default {
           align-items: center;
           margin-left: 10px;
         }
+      }
+      &-body {
+        margin-bottom: 20px;
       }
       &-footer {
         display: flex;
