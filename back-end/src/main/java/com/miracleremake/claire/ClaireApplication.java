@@ -1,1 +1,0 @@
-package com.miracleremake.claire;import org.springframework.boot.SpringApplication;import org.springframework.boot.autoconfigure.SpringBootApplication;@SpringBootApplicationpublic class ClaireApplication {    public static void main(String[] args) {        SpringApplication.run(ClaireApplication.class, args);    }}
